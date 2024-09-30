@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Builder
 @Data
 @Entity
-@Table(name = "Products")
+@Table(name = "product")
 public class Product {
 
     @Id

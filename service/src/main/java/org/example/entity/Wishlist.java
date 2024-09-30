@@ -21,7 +21,7 @@ import java.util.List;
 @Builder
 @Data
 @Entity
-@Table(name = "Wishlist")
+@Table(name = "wishlist")
 public class Wishlist {
 
     @Id

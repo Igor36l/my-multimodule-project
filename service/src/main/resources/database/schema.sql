@@ -1,4 +1,4 @@
-CREATE TABLE Users (
+CREATE TABLE users (
     user_id BIGSERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE Users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Sellers (
+CREATE TABLE seller (
     seller_id BIGSERIAL PRIMARY KEY,
     user_id BIGINT UNIQUE,
     organization_name VARCHAR(255) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE Sellers (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
-CREATE TABLE Categories (
+CREATE TABLE category (
     category_id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -34,7 +34,7 @@ CREATE TABLE Categories (
     FOREIGN KEY (parent_category_id) REFERENCES Categories(category_id)
 );
 
-CREATE TABLE Products (
+CREATE TABLE product (
     product_id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -48,7 +48,7 @@ CREATE TABLE Products (
     FOREIGN KEY (seller_id) REFERENCES Sellers(seller_id)
 );
 
-CREATE TABLE Orders (
+CREATE TABLE orders (
     order_id BIGSERIAL PRIMARY KEY,
     user_id BIGINT,
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -60,17 +60,7 @@ CREATE TABLE Orders (
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
-CREATE TABLE OrderItems (
-    order_item_id BIGSERIAL PRIMARY KEY,
-    order_id BIGINT,
-    product_id BIGINT,
-    quantity INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
-    FOREIGN KEY (product_id) REFERENCES Products(product_id)
-);
-
-CREATE TABLE Reviews (
+CREATE TABLE review (
     review_id BIGSERIAL PRIMARY KEY,
     user_id BIGINT,
     product_id BIGINT,
@@ -82,7 +72,7 @@ CREATE TABLE Reviews (
     FOREIGN KEY (product_id) REFERENCES Products(product_id)
 );
 
-CREATE TABLE Payments (
+CREATE TABLE payment (
     payment_id BIGSERIAL PRIMARY KEY,
     order_id BIGINT,
     payment_method VARCHAR(50) NOT NULL,
@@ -92,17 +82,7 @@ CREATE TABLE Payments (
     FOREIGN KEY (order_id) REFERENCES Orders(order_id)
 );
 
-CREATE TABLE Shipping (
-    shipping_id BIGSERIAL PRIMARY KEY,
-    order_id BIGINT,
-    shipping_method VARCHAR(50) NOT NULL,
-    shipping_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    tracking_number VARCHAR(50),
-    status VARCHAR(50) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id)
-);
-
-CREATE TABLE ProductImages (
+CREATE TABLE product_image (
     image_id BIGSERIAL PRIMARY KEY,
     product_id BIGINT,
     image_url VARCHAR(255) NOT NULL,
@@ -111,7 +91,7 @@ CREATE TABLE ProductImages (
     FOREIGN KEY (product_id) REFERENCES Products(product_id)
 );
 
-CREATE TABLE Wishlist (
+CREATE TABLE wishlist (
     wishlist_id BIGSERIAL PRIMARY KEY,
     user_id BIGINT,
     product_id BIGINT,
