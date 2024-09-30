@@ -25,7 +25,7 @@ public class ProductImage {
     private Long id;
 
     @ManyToOne
-    private Long product;
+    private Product product;
 
     @Column(nullable = false)
     private String imageUrl;

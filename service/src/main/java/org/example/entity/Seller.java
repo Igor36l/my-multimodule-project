@@ -27,8 +27,7 @@ public class Seller {
     private Long id;
 
     @OneToOne
-    @Column(nullable = false, unique = true)
-    private Long user;
+    private User user;
 
     @Column(nullable = false)
     private String organizationName;

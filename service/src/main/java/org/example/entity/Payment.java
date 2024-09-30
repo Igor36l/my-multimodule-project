@@ -28,7 +28,7 @@ public class Payment {
     private Long id;
 
     @OneToOne
-    private Long orderId;
+    private Order order;
 
     @Column(nullable = false)
     private String paymentMethod;

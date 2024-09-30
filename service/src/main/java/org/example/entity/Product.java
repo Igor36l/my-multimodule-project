@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,11 +40,11 @@ public class Product {
     @Column(nullable = false)
     private Integer stock;
 
-    @ManyToOne
-    private Long categoryId;
+    @ManyToMany
+    private List<Category> category;
 
     @ManyToOne
-    private Long sellerId;
+    private Seller seller;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
