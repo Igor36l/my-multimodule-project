@@ -5,12 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -18,28 +20,31 @@ import java.time.LocalDateTime;
 @Builder
 @Data
 @Entity
-@Table(name = "Shipping")
-public class Shipping {
+@Table(name = "Orders")
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long orderId;
+    @ManyToOne
+    private User user;
 
     @Column(nullable = false)
-    private String shippingMethod;
+    private LocalDateTime orderDate;
 
     @Column(nullable = false)
-    private LocalDateTime shippingDate;
-
-    private String trackingNumber;
+    private String status;
 
     @Column(nullable = false)
-    private Status status;
+    private BigDecimal totalAmount;
 
-    public enum Status {
-        TODO, IN_PROGRESS, DONE
-    }
+    private String shippingAddress;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
 }

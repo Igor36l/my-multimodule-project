@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,27 +13,33 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
 @Entity
-@Table(name = "OrderItems")
-public class OrderItems {
+@Table(name = "Payments")
+public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne
     private Long orderId;
 
-    private Long productId;
+    @Column(nullable = false)
+    private String paymentMethod;
 
     @Column(nullable = false)
-    private Integer quantity;
+    private BigDecimal amount;
 
     @Column(nullable = false)
-    private BigDecimal price;
+    private LocalDateTime paymentDate;
+
+    @Column(nullable = false)
+    private String status;
 
 }

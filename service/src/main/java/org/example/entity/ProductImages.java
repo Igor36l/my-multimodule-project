@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,17 +24,12 @@ public class ProductImages {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long image_id;
+    private Long id;
 
-    private Long product_id;
-
-    @Column(nullable = false)
-    private String image_url;
+    @ManyToOne
+    private Long product;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
-
-    @Column(nullable = false)
-    private LocalDateTime updated_at;
+    private String imageUrl;
 
 }
