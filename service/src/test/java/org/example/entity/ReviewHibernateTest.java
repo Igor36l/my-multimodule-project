@@ -8,22 +8,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PaymentHibernateTest {
+class ReviewHibernateTest {
 
     private SessionFactory sessionFactory;
     private Session session;
     private Transaction transaction;
-    private Order order;
-    private Payment payment;
     private User user;
+    private Review review;
 
     @BeforeEach
-    public void setUp() {
+    void setUp(){
         sessionFactory = new Configuration().configure().buildSessionFactory();
         session = sessionFactory.openSession();
         transaction = session.beginTransaction();
@@ -46,25 +44,15 @@ public class PaymentHibernateTest {
 
         session.persist(user);
 
-        order = Order.builder()
+        review = Review.builder()
+                .comment("Comment")
+                .rating(5)
                 .user(user)
-                .orderDate(LocalDateTime.now())
-                .status("PENDING")
-                .totalAmount(new BigDecimal("100.00"))
-                .shippingAddress("456 Elm St")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        session.persist(order);
-
-        payment = Payment.builder()
-                .amount(BigDecimal.valueOf(1000))
-                .order(order)
-                .paymentDate(LocalDateTime.now())
-                .paymentMethod("Card")
-                .status(Payment.Status.IN_PROGRESS)
-                .build();
+        session.persist(review);
 
     }
 
@@ -78,55 +66,57 @@ public class PaymentHibernateTest {
     }
 
     @Test
-    public void testCreatePayment() {
-        session.persist(payment);
+    public void testCreateReview() {
+        session.persist(review);
         transaction.commit();
         session.beginTransaction();
 
-        Payment savedPayment = session.get(Payment.class, payment.getId());
-        assertThat(savedPayment).isNotNull();
-        assertThat(savedPayment.getId()).isNotNull();
+        Review savedReview = session.get(Review.class, review.getId());
+        assertThat(savedReview).isNotNull();
+        assertThat(savedReview.getId()).isNotNull();
     }
 
     @Test
-    public void testReadPayment() {
-        session.persist(payment);
+    public void testReadReview() {
+        session.persist(review);
         transaction.commit();
         session.beginTransaction();
 
-        Payment savedPayment = session.get(Payment.class, payment.getId());
-        assertThat(savedPayment).isNotNull();
-        assertThat(savedPayment.getId()).isNotNull();
+        Review savedReview = session.get(Review.class, review.getId());
+        assertThat(savedReview).isNotNull();
+        assertThat(savedReview.getId()).isNotNull();
     }
 
     @Test
-    public void testUpdatePayment() {
-        session.persist(payment);
+    public void testUpdateReview() {
+        session.persist(review);
         transaction.commit();
         session.beginTransaction();
 
-        Payment foundPayment = session.get(Payment.class, payment.getId());
-        foundPayment.setStatus(Payment.Status.DONE);
-        session.merge(foundPayment);
+        Review foundReview = session.get(Review.class, review.getId());
+        foundReview.setComment("New comment");
+        session.merge(foundReview);
         transaction.commit();
         session.beginTransaction();
 
-        Payment updatedPayment = session.get(Payment.class, payment.getId());
-        assertThat(updatedPayment.getStatus()).isEqualByComparingTo(Payment.Status.DONE);
+        Review updatedPayment = session.get(Review.class, review.getId());
+        assertThat(updatedPayment.getComment().equals("New comment"));
     }
 
     @Test
     public void testDeletePayment() {
-        session.persist(payment);
+        session.persist(review);
         transaction.commit();
         session.beginTransaction();
 
-        session.remove(payment);
+        session.remove(review);
         transaction.commit();
         session.beginTransaction();
 
-        Payment deletedPayment = session.get(Payment.class, payment.getId());
-        assertThat(deletedPayment).isNull();
+        Review deletedReview = session.get(Review.class, review.getId());
+        assertThat(deletedReview).isNull();
     }
+
+
 
 }
