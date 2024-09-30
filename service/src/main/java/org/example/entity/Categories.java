@@ -21,13 +21,13 @@ public class Categories {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long category_id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
 
     private String description;
 
-    private Long parent_category_id;
+    private Long parentCategoryId;
 
 }

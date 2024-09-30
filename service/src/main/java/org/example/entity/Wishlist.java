@@ -23,16 +23,16 @@ public class Wishlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long wishlist_id;
+    private Long id;
 
-    private Long user_id;
+    private Long userId;
 
-    private Long product_id;
-
-    @Column(nullable = false)
-    private LocalDateTime created_at;
+    private Long productId;
 
     @Column(nullable = false)
-    private LocalDateTime updated_at;
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
 }

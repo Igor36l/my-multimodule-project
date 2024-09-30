@@ -34,10 +34,10 @@ public class Users {
     private String email;
 
     @Column(nullable = false)
-    private String password_hash;
+    private String passwordHash;
 
-    private String first_name;
-    private String last_name;
+    private String firstName;
+    private String lastName;
     private String phone;
     private String address;
 
@@ -48,11 +48,19 @@ public class Users {
     private Gender gender;
 
     @Column(nullable = false)
-    private Boolean is_seller = false;
+    private Boolean isSeller = false;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
+
+    public enum Role {
+        USER, ADMIN
+    }
+
+    public enum Gender {
+        MALE, FEMALE
+    }
 }

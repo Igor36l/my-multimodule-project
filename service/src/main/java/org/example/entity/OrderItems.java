@@ -23,11 +23,11 @@ public class OrderItems {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long order_item_id;
+    private Long id;
 
-    private Long order_id;
+    private Long orderId;
 
-    private Long product_id;
+    private Long productId;
 
     @Column(nullable = false)
     private Integer quantity;

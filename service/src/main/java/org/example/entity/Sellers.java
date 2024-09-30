@@ -23,22 +23,22 @@ public class Sellers {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long seller_id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
-    private Long user_id;
+    private Long userId;
 
     @Column(nullable = false)
-    private String organization_name;
+    private String organizationName;
 
-    private String organization_description;
-    private String organization_address;
-    private String organization_phone;
-
-    @Column(nullable = false)
-    private LocalDateTime created_at;
+    private String organizationDescription;
+    private String organizationAddress;
+    private String organizationPhone;
 
     @Column(nullable = false)
-    private LocalDateTime updated_at;
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
 }

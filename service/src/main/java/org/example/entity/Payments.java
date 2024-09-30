@@ -24,18 +24,18 @@ public class Payments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long payment_id;
+    private Long id;
 
-    private Long order_id;
+    private Long orderId;
 
     @Column(nullable = false)
-    private String payment_method;
+    private String paymentMethod;
 
     @Column(nullable = false)
     private BigDecimal amount;
 
     @Column(nullable = false)
-    private LocalDateTime payment_date;
+    private LocalDateTime paymentDate;
 
     @Column(nullable = false)
     private String status;

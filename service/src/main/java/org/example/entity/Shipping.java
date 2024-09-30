@@ -23,19 +23,23 @@ public class Shipping {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long shipping_id;
+    private Long id;
 
-    private Long order_id;
-
-    @Column(nullable = false)
-    private String shipping_method;
+    private Long orderId;
 
     @Column(nullable = false)
-    private LocalDateTime shipping_date;
-
-    private String tracking_number;
+    private String shippingMethod;
 
     @Column(nullable = false)
-    private String status;
+    private LocalDateTime shippingDate;
+
+    private String trackingNumber;
+
+    @Column(nullable = false)
+    private Status status;
+
+    public enum Status {
+        TODO, IN_PROGRESS, DONE
+    }
 
 }

@@ -23,11 +23,11 @@ public class Reviews {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long review_id;
+    private Long id;
 
-    private Long user_id;
+    private Long userId;
 
-    private Long product_id;
+    private Long productId;
 
     @Column(nullable = false)
     private Integer rating;
@@ -35,9 +35,9 @@ public class Reviews {
     private String comment;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 
 }

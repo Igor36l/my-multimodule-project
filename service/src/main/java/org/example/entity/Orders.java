@@ -24,25 +24,25 @@ public class Orders {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long order_id;
+    private Long id;
 
-    private Long user_id;
+    private Long userId;
 
     @Column(nullable = false)
-    private LocalDateTime order_date;
+    private LocalDateTime orderDate;
 
     @Column(nullable = false)
     private String status;
 
     @Column(nullable = false)
-    private BigDecimal total_amount;
+    private BigDecimal totalAmount;
 
-    private String shipping_address;
-
-    @Column(nullable = false)
-    private LocalDateTime created_at;
+    private String shippingAddress;
 
     @Column(nullable = false)
-    private LocalDateTime updated_at;
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
 }
