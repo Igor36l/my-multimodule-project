@@ -1,10 +1,12 @@
-package org.example.entity;
+package org.market.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,14 +15,16 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
 @Entity
-@Table(name = "Products")
-public class Products {
+@Table(name = "product")
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,9 +41,11 @@ public class Products {
     @Column(nullable = false)
     private Integer stock;
 
-    private Long categoryId;
+    @OneToMany
+    private List<Category> category = new ArrayList<>();
 
-    private Long sellerId;
+    @ManyToOne
+    private Seller seller;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
