@@ -1,4 +1,4 @@
-package org.example.entity;
+package org.market.entity;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -19,7 +19,7 @@ public class CategoryHibernateTest {
     private Category parentCategory;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         sessionFactory = new Configuration().configure().buildSessionFactory();
         session = sessionFactory.openSession();
         transaction = session.beginTransaction();
@@ -37,7 +37,7 @@ public class CategoryHibernateTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         if (transaction.isActive()) {
             transaction.rollback();
         }
@@ -46,7 +46,7 @@ public class CategoryHibernateTest {
     }
 
     @Test
-    public void testCreateCategory() {
+    void testCreateCategory() {
         session.persist(parentCategory);
         session.persist(category);
         transaction.commit();
@@ -58,7 +58,7 @@ public class CategoryHibernateTest {
     }
 
     @Test
-    public void testReadCategory() {
+    void testReadCategory() {
         session.persist(parentCategory);
         session.persist(category);
         transaction.commit();
@@ -70,7 +70,7 @@ public class CategoryHibernateTest {
     }
 
     @Test
-    public void testUpdateCategory() {
+    void updateCategory() {
         session.persist(parentCategory);
         session.persist(category);
         transaction.commit();
@@ -87,7 +87,7 @@ public class CategoryHibernateTest {
     }
 
     @Test
-    public void testDeleteCategory() {
+    void deleteCategory() {
         session.persist(parentCategory);
         session.persist(category);
         transaction.commit();

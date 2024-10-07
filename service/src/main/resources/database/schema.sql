@@ -74,7 +74,7 @@ CREATE TABLE review (
 
 CREATE TABLE payment (
     payment_id BIGSERIAL PRIMARY KEY,
-    order_id BIGINT,
+    order_id BIGINT UNIQUE,
     payment_method VARCHAR(50) NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -10,14 +10,14 @@
         <property name="hibernate.hbm2ddl.auto">create-drop</property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
-        <mapping class="org.example.entity.User"/>
-        <mapping class="org.example.entity.Category"/>
-        <mapping class="org.example.entity.Order"/>
-        <mapping class="org.example.entity.Payment"/>
-        <mapping class="org.example.entity.Product"/>
-        <mapping class="org.example.entity.ProductImage"/>
-        <mapping class="org.example.entity.Review"/>
-        <mapping class="org.example.entity.Seller"/>
-        <mapping class="org.example.entity.Wishlist"/>
+        <mapping class="org.market.entity.User"/>
+        <mapping class="org.market.entity.Category"/>
+        <mapping class="org.market.entity.Order"/>
+        <mapping class="org.market.entity.Payment"/>
+        <mapping class="org.market.entity.Product"/>
+        <mapping class="org.market.entity.ProductImage"/>
+        <mapping class="org.market.entity.Review"/>
+        <mapping class="org.market.entity.Seller"/>
+        <mapping class="org.market.entity.Wishlist"/>
     </session-factory>
 </hibernate-configuration>

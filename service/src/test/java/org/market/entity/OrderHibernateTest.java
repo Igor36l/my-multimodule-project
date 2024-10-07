@@ -1,4 +1,4 @@
-package org.example.entity;
+package org.market.entity;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

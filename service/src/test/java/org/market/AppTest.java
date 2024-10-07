@@ -1,4 +1,4 @@
-package org.example;
+package org.market;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package org.example.entity;
+package org.market.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,24 +12,35 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
 @Entity
-@Table(name = "category")
-public class Category {
+@Table(name = "review")
+public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
-    private String description;
+    @ManyToOne
+    private User user;
 
     @ManyToOne
-    private Category parentCategory;
+    private Product product;
+
+    @Column(nullable = false)
+    private Integer rating;
+
+    private String comment;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
 }

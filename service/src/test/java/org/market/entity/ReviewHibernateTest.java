@@ -1,4 +1,4 @@
-package org.example.entity;
+package org.market.entity;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -12,15 +12,16 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserHibernateTest {
+class ReviewHibernateTest {
 
     private SessionFactory sessionFactory;
     private Session session;
     private Transaction transaction;
     private User user;
+    private Review review;
 
     @BeforeEach
-    public void setUp() {
+    void setUp(){
         sessionFactory = new Configuration().configure().buildSessionFactory();
         session = sessionFactory.openSession();
         transaction = session.beginTransaction();
@@ -40,6 +41,19 @@ public class UserHibernateTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
+
+        session.persist(user);
+
+        review = Review.builder()
+                .comment("Comment")
+                .rating(5)
+                .user(user)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        session.persist(review);
+
     }
 
     @AfterEach
@@ -52,55 +66,57 @@ public class UserHibernateTest {
     }
 
     @Test
-    public void testCreateUser() {
-        session.persist(user);
+    public void testCreateReview() {
+        session.persist(review);
         transaction.commit();
         session.beginTransaction();
 
-        User savedUser = session.get(User.class, user.getId());
-        assertThat(savedUser).isNotNull();
-        assertThat(savedUser.getId()).isNotNull();
+        Review savedReview = session.get(Review.class, review.getId());
+        assertThat(savedReview).isNotNull();
+        assertThat(savedReview.getId()).isNotNull();
     }
 
     @Test
-    public void testReadUser() {
-        session.persist(user);
+    public void testReadReview() {
+        session.persist(review);
         transaction.commit();
         session.beginTransaction();
 
-        User foundUser = session.get(User.class, user.getId());
-        assertThat(foundUser).isNotNull();
-        assertThat(foundUser).isEqualTo(user);
+        Review savedReview = session.get(Review.class, review.getId());
+        assertThat(savedReview).isNotNull();
+        assertThat(savedReview.getId()).isNotNull();
     }
 
     @Test
-    public void testUpdateUser() {
-        session.persist(user);
+    public void testUpdateReview() {
+        session.persist(review);
         transaction.commit();
         session.beginTransaction();
 
-        User foundUser = session.get(User.class, user.getId());
-        foundUser.setUsername("updateduser");
-        session.merge(foundUser);
+        Review foundReview = session.get(Review.class, review.getId());
+        foundReview.setComment("New comment");
+        session.merge(foundReview);
         transaction.commit();
         session.beginTransaction();
 
-        User updatedUser = session.get(User.class, user.getId());
-        assertThat(updatedUser.getUsername()).isEqualTo("updateduser");
+        Review updatedPayment = session.get(Review.class, review.getId());
+        assertThat(updatedPayment.getComment().equals("New comment"));
     }
 
     @Test
-    public void testDeleteUser() {
-        session.persist(user);
+    public void testDeletePayment() {
+        session.persist(review);
         transaction.commit();
         session.beginTransaction();
 
-        session.remove(user);
+        session.remove(review);
         transaction.commit();
         session.beginTransaction();
 
-        User deletedUser = session.get(User.class, user.getId());
-        assertThat(deletedUser).isNull();
+        Review deletedReview = session.get(Review.class, review.getId());
+        assertThat(deletedReview).isNull();
     }
+
+
 
 }
