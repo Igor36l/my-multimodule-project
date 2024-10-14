@@ -21,7 +21,7 @@ public class OrderHibernateTest extends GeneralHibernateTest {
     }
 
     @Test
-    public void testCreateOrder() {
+    void createOrder() {
         Order newOrder = Order.builder()
                 .user(user)
                 .orderDate(LocalDateTime.now())
@@ -38,14 +38,14 @@ public class OrderHibernateTest extends GeneralHibernateTest {
     }
 
     @Test
-    public void testReadOrder() {
+    void readOrder() {
         Optional<Order> foundOrder = orderRepository.findById(order.getId());
 
         assertThat(foundOrder.get()).isEqualTo(order);
     }
 
     @Test
-    public void testUpdateOrder() {
+    void updateOrder() {
         Optional<Order> foundOrder = orderRepository.findById(order.getId());
         foundOrder.get().setStatus("COMPLETED");
 
@@ -55,7 +55,7 @@ public class OrderHibernateTest extends GeneralHibernateTest {
     }
 
     @Test
-    public void testDeleteOrder() {
+    void deleteOrder() {
         orderRepository.delete(order.getId());
 
         Optional<Order> deletedOrder = orderRepository.findById(order.getId());
