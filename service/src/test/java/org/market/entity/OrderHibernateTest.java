@@ -1,14 +1,37 @@
 package org.market.entity;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.market.dao.OrderRepository;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrderHibernateTest extends GeneralHibernateTest {
 
+    private OrderRepository orderRepository;
+
+    @BeforeEach
+    void beforeEach() {
+        super.beforeEach();
+       orderRepository = new OrderRepository(session);
+    }
+
     @Test
     public void testCreateOrder() {
-        Order savedOrder = session.get(Order.class, order.getId());
+        Order newOrder = Order.builder()
+                .user(user)
+                .orderDate(LocalDateTime.now())
+                .status("PENDING")
+                .totalAmount(new BigDecimal("100.00"))
+                .shippingAddress("456 Elm St")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        Order savedOrder = orderRepository.save(newOrder);
 
         assertThat(savedOrder).isNotNull();
         assertThat(savedOrder.getId()).isNotNull();
@@ -16,28 +39,27 @@ public class OrderHibernateTest extends GeneralHibernateTest {
 
     @Test
     public void testReadOrder() {
-        Order foundOrder = session.get(Order.class, order.getId());
+        Optional<Order> foundOrder = orderRepository.findById(order.getId());
 
-        assertThat(foundOrder).isNotNull();
-        assertThat(foundOrder).isEqualTo(order);
+        assertThat(foundOrder.get()).isEqualTo(order);
     }
 
     @Test
     public void testUpdateOrder() {
-        Order foundOrder = session.get(Order.class, order.getId());
-        foundOrder.setStatus("COMPLETED");
+        Optional<Order> foundOrder = orderRepository.findById(order.getId());
+        foundOrder.get().setStatus("COMPLETED");
 
-        Order updatedOrder = session.get(Order.class, order.getId());
+        Order updatedOrder = orderRepository.update(foundOrder.get());
 
         assertThat(updatedOrder.getStatus()).isEqualTo("COMPLETED");
     }
 
     @Test
     public void testDeleteOrder() {
-        session.remove(order);
+        orderRepository.delete(order.getId());
 
-        Order deletedOrder = session.get(Order.class, order.getId());
+        Optional<Order> deletedOrder = orderRepository.findById(order.getId());
 
-        assertThat(deletedOrder).isNull();
+        assertThat(deletedOrder).isEmpty();
     }
 }

@@ -1,5 +1,6 @@
 package org.market.entity;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.market.dao.CategoryRepository;
 
@@ -9,10 +10,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CategoryHibernateTest extends GeneralHibernateTest {
 
+    private CategoryRepository categoryRepository;
+
+    @BeforeEach
+    void beforeEach() {
+        super.beforeEach();
+        categoryRepository = new CategoryRepository(session);
+    }
 
     @Test
     void createCategory() {
-        CategoryRepository categoryRepository = new CategoryRepository(session);
         Category newCategory = Category.builder()
                 .name("New child Category")
                 .description("This is a new child category")
@@ -25,7 +32,6 @@ public class CategoryHibernateTest extends GeneralHibernateTest {
 
     @Test
     void readCategory() {
-        CategoryRepository categoryRepository = new CategoryRepository(session);
         Optional<Category> foundCategory = categoryRepository.findById(category.getId());
 
         assertThat(foundCategory.get()).isNotNull();
@@ -34,7 +40,6 @@ public class CategoryHibernateTest extends GeneralHibernateTest {
 
     @Test
     void updateCategory() {
-        CategoryRepository categoryRepository = new CategoryRepository(session);
         Optional<Category> foundCategory = categoryRepository.findById(category.getId());
         foundCategory.get().setName("Updated Category");
 
@@ -45,7 +50,6 @@ public class CategoryHibernateTest extends GeneralHibernateTest {
 
     @Test
     void deleteCategory() {
-        CategoryRepository categoryRepository = new CategoryRepository(session);
         categoryRepository.delete(category.getId());
 
         Optional<Category> deletedCategory = categoryRepository.findById(category.getId());
