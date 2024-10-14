@@ -1,13 +1,12 @@
 package org.market.entity;
 
-import lombok.Cleanup;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.market.dao.OrderRepository;
 import org.market.util.HibernateTestUtils;
 
 import java.math.BigDecimal;
