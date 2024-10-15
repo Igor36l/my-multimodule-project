@@ -32,7 +32,7 @@ public class Wishlist {
     private User user;
 
     @OneToMany
-    private List<Product> products;
+    private List<Product> product;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
