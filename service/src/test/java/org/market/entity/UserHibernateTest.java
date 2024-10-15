@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserHibernateTest extends GeneralHibernateTest{
 
     @Test
-    void testCreateUser() {
+    void createUser() {
         User savedUser = session.get(User.class, user.getId());
 
         assertThat(savedUser).isNotNull();
@@ -15,17 +15,17 @@ public class UserHibernateTest extends GeneralHibernateTest{
     }
 
     @Test
-    void testReadUser() {
-        User foundUser = session.get(User.class, user.getId());
+    void readUser() {
+        User foundedUser = session.get(User.class, user.getId());
 
-        assertThat(foundUser).isNotNull();
-        assertThat(foundUser).isEqualTo(user);
+        assertThat(foundedUser).isNotNull();
+        assertThat(foundedUser).isEqualTo(user);
     }
 
     @Test
-    void testUpdateUser() {
-        User foundUser = session.get(User.class, user.getId());
-        foundUser.setUsername("updateduser");
+    void updateUser() {
+        User foundedUser = session.get(User.class, user.getId());
+        foundedUser.setUsername("updateduser");
 
         User updatedUser = session.get(User.class, user.getId());
 
@@ -33,7 +33,7 @@ public class UserHibernateTest extends GeneralHibernateTest{
     }
 
     @Test
-    void testDeleteUser() {
+    void deleteUser() {
         session.remove(user);
 
         User deletedUser = session.get(User.class, user.getId());

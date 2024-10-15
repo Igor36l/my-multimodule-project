@@ -41,7 +41,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Convert(converter = BirthdayConverter.class)
     private Birthday birthday;
 
     @Column(nullable = false)

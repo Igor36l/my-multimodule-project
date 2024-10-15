@@ -1,11 +1,13 @@
 package org.market.converter;
 
 import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import org.market.entity.Birthday;
 
 import java.sql.Date;
 import java.util.Optional;
 
+@Converter(autoApply = true)
 public class BirthdayConverter implements AttributeConverter<Birthday, Date> {
 
     @Override
