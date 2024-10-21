@@ -61,10 +61,10 @@ public class PaymentHibernateTest extends GeneralHibernateTest {
     @Test
     void deletePayment() {
         Optional<Payment> foundPayment = paymentRepository.findById(payment.getId());
+
         paymentRepository.delete(foundPayment.orElse(null));
 
         Payment deletedPayment = entityManager.find(Payment.class, payment.getId());
-
         assertThat(deletedPayment).isNull();
     }
 

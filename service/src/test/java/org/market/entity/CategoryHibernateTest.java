@@ -44,10 +44,10 @@ public class CategoryHibernateTest extends GeneralHibernateTest {
     @Test
     void deleteCategory() {
         Optional<Category> foundCategory = categoryRepository.findById(category.getId());
+
         categoryRepository.delete(foundCategory.orElse(null));
 
         Optional<Category> deletedCategory = categoryRepository.findById(category.getId());
-
         assertThat(deletedCategory).isEmpty();
     }
 }

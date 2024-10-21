@@ -1,44 +1,69 @@
 package org.market.entity;
 
 import org.junit.jupiter.api.Test;
+import org.market.repository.OrderRepository;
+import org.market.repository.ReviewRepository;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ReviewHibernateTest extends GeneralHibernateTest {
 
+    private final ReviewRepository reviewRepository = context.getBean(ReviewRepository.class);
+
     @Test
     void testCreateReview() {
-        Review savedReview = entityManager.find(Review.class, review.getId());
+        //given
+        Review newReview = Review.builder()
+                .comment("Comment")
+                .rating(5)
+                .user(user)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
 
-        assertThat(savedReview).isNotNull();
+        //when
+        Review savedReview = reviewRepository.save(newReview);
+
+        //then
         assertThat(savedReview.getId()).isNotNull();
     }
 
     @Test
    void testReadReview() {
-        Review savedReview = entityManager.find(Review.class, review.getId());
+        //when
+        Optional<Review> foundReview = reviewRepository.findById(review.getId());
 
-        assertThat(savedReview).isNotNull();
-        assertThat(savedReview.getId()).isNotNull();
+        //then
+        assertThat(foundReview.get().getId()).isNotNull();
     }
 
     @Test
    void testUpdateReview() {
-        Review foundReview = entityManager.find(Review.class, review.getId());
-        foundReview.setComment("New comment");
+        //given
+        Optional<Review> foundReview = reviewRepository.findById(review.getId());
+        foundReview.get().setComment("New comment");
 
-        Review updatedPayment = entityManager.find(Review.class, review.getId());
+        //when
+        Optional<Review> updatedPayment = reviewRepository.findById(review.getId());
 
-        assertThat(updatedPayment.getComment().equals("New comment"));
+        //then
+        assertThat(updatedPayment.get().getComment().equals("New comment"));
     }
 
     @Test
     void testDeletePayment() {
-        entityManager.remove(review);
+        //given
+        Optional<Review> foundReview = reviewRepository.findById(review.getId());
 
-        Review deletedReview = entityManager.find(Review.class, review.getId());
+        //when
+        reviewRepository.delete(foundReview.orElse(null));
 
-        assertThat(deletedReview).isNull();
+        //then
+        Optional<Review> deletedReview = reviewRepository.findById(review.getId());
+        assertThat(deletedReview).isEmpty();
     }
 
 }
