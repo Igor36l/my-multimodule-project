@@ -16,7 +16,7 @@ public class PaymentHibernateTest extends GeneralHibernateTest {
 
     @BeforeEach
     void beforeEach() {
-        paymentRepository = new PaymentRepository(session);
+        paymentRepository = new PaymentRepository(entityManager);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class PaymentHibernateTest extends GeneralHibernateTest {
         Optional<Payment> foundPayment = paymentRepository.findById(payment.getId());
         paymentRepository.delete(foundPayment.orElse(null));
 
-        Payment deletedPayment = session.get(Payment.class, payment.getId());
+        Payment deletedPayment = entityManager.find(Payment.class, payment.getId());
 
         assertThat(deletedPayment).isNull();
     }

@@ -16,7 +16,7 @@ public class OrderHibernateTest extends GeneralHibernateTest {
 
     @BeforeEach
     void beforeEach() {
-        orderRepository = new OrderRepository(session);
+        orderRepository = new OrderRepository(entityManager);
     }
 
     @Test

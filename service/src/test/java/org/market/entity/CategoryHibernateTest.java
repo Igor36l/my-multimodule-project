@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CategoryHibernateTest extends GeneralHibernateTest {
 
-    private final CategoryRepository categoryRepository = new CategoryRepository(session);
+    private final CategoryRepository categoryRepository = context.getBean(CategoryRepository.class);
 
     @Test
     void createCategory() {

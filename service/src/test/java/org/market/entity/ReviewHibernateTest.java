@@ -8,7 +8,7 @@ class ReviewHibernateTest extends GeneralHibernateTest {
 
     @Test
     void testCreateReview() {
-        Review savedReview = session.get(Review.class, review.getId());
+        Review savedReview = entityManager.find(Review.class, review.getId());
 
         assertThat(savedReview).isNotNull();
         assertThat(savedReview.getId()).isNotNull();
@@ -16,7 +16,7 @@ class ReviewHibernateTest extends GeneralHibernateTest {
 
     @Test
    void testReadReview() {
-        Review savedReview = session.get(Review.class, review.getId());
+        Review savedReview = entityManager.find(Review.class, review.getId());
 
         assertThat(savedReview).isNotNull();
         assertThat(savedReview.getId()).isNotNull();
@@ -24,19 +24,19 @@ class ReviewHibernateTest extends GeneralHibernateTest {
 
     @Test
    void testUpdateReview() {
-        Review foundReview = session.get(Review.class, review.getId());
+        Review foundReview = entityManager.find(Review.class, review.getId());
         foundReview.setComment("New comment");
 
-        Review updatedPayment = session.get(Review.class, review.getId());
+        Review updatedPayment = entityManager.find(Review.class, review.getId());
 
         assertThat(updatedPayment.getComment().equals("New comment"));
     }
 
     @Test
     void testDeletePayment() {
-        session.delete(review);
+        entityManager.remove(review);
 
-        Review deletedReview = session.get(Review.class, review.getId());
+        Review deletedReview = entityManager.find(Review.class, review.getId());
 
         assertThat(deletedReview).isNull();
     }
