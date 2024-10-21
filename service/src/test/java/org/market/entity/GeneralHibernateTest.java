@@ -1,11 +1,12 @@
 package org.market.entity;
 
 import jakarta.persistence.EntityManager;
-import org.hibernate.Transaction;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.market.configoration.MainConfig;
+import org.market.configuration.MainConfig;
+import org.market.configuration.MainTestConfig;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -26,7 +27,7 @@ public class GeneralHibernateTest {
 
     @BeforeAll
     static void setUp() {
-        context = new AnnotationConfigApplicationContext(MainConfig.class);
+        context = new AnnotationConfigApplicationContext(MainTestConfig.class);
         entityManager = context.getBean(EntityManager.class);
     }
 
@@ -98,5 +99,10 @@ public class GeneralHibernateTest {
         if (entityManager.getTransaction() != null && entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().rollback();
         }
+    }
+
+    @AfterAll
+    static void afterAll() {
+        entityManager.close();
     }
 }
