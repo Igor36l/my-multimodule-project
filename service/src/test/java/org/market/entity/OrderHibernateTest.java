@@ -2,7 +2,7 @@ package org.market.entity;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.market.dao.OrderRepository;
+import org.market.repository.OrderRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,8 +16,7 @@ public class OrderHibernateTest extends GeneralHibernateTest {
 
     @BeforeEach
     void beforeEach() {
-        super.beforeEach();
-       orderRepository = new OrderRepository(session);
+        orderRepository = new OrderRepository(session);
     }
 
     @Test
@@ -56,7 +55,8 @@ public class OrderHibernateTest extends GeneralHibernateTest {
 
     @Test
     void deleteOrder() {
-        orderRepository.delete(order.getId());
+        Optional<Order> foundOrder = orderRepository.findById(order.getId());
+        orderRepository.delete(foundOrder.orElse(null));
 
         Optional<Order> deletedOrder = orderRepository.findById(order.getId());
 

@@ -6,7 +6,6 @@ import org.hibernate.Transaction;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.market.dao.OrderRepository;
 import org.market.util.HibernateTestUtils;
 
 import java.math.BigDecimal;
@@ -31,7 +30,7 @@ public class GeneralHibernateTest {
     }
 
     @BeforeEach
-       void beforeEach() {
+       void beforeEachGeneral() {
         session = sessionFactory.getCurrentSession();
         transaction = session.beginTransaction();
         user = User.builder()
@@ -95,7 +94,7 @@ public class GeneralHibernateTest {
     }
 
     @AfterEach
-    void afterEach() {
+    void afterEachGeneral() {
         if (transaction != null && transaction.isActive()) {
             transaction.rollback();
         }

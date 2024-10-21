@@ -1,4 +1,4 @@
-package org.market.dao;
+package org.market.repository;
 
 import jakarta.persistence.EntityManager;
 import org.market.entity.Category;

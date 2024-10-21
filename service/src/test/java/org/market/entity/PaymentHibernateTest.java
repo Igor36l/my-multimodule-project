@@ -2,8 +2,7 @@ package org.market.entity;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.market.dao.CategoryRepository;
-import org.market.dao.PaymentRepository;
+import org.market.repository.PaymentRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,7 +16,6 @@ public class PaymentHibernateTest extends GeneralHibernateTest {
 
     @BeforeEach
     void beforeEach() {
-        super.beforeEach();
         paymentRepository = new PaymentRepository(session);
     }
 
@@ -55,7 +53,8 @@ public class PaymentHibernateTest extends GeneralHibernateTest {
 
     @Test
     void deletePayment() {
-        paymentRepository.delete(payment.getId());
+        Optional<Payment> foundPayment = paymentRepository.findById(payment.getId());
+        paymentRepository.delete(foundPayment.orElse(null));
 
         Payment deletedPayment = session.get(Payment.class, payment.getId());
 

@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -32,7 +33,7 @@ public class Wishlist {
     private User user;
 
     @OneToMany
-    private List<Product> product;
+    private List<Product> product = new ArrayList<>();
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

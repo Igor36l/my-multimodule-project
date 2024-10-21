@@ -1,4 +1,4 @@
-package org.market.dao;
+package org.market.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public abstract class RepositoryBase<K extends Serializable, E> implements IRepository<K, E> {
+public abstract class RepositoryBase<K extends Serializable, E> implements Repository<K, E> {
 
     private final Class<E> entityClass;
     private final EntityManager entityManager;
@@ -22,16 +22,12 @@ public abstract class RepositoryBase<K extends Serializable, E> implements IRepo
 
     @Override
     public E update(E entity) {
-        entityManager.merge(entity);
-        return entity;
+        return entityManager.merge(entity);
     }
 
     @Override
-    public void delete(K id) {
-        E entity = entityManager.find(entityClass, id);
-        if (entity != null) {
-            entityManager.remove(entity);
-        }
+    public void delete(E entity) {
+        entityManager.remove(entity);
     }
 
     @Override

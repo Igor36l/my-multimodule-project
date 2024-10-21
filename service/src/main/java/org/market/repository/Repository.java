@@ -1,10 +1,10 @@
-package org.market.dao;
+package org.market.repository;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-public interface IRepository<K extends Serializable, E> {
+public interface Repository<K extends Serializable, E> {
 
     E save(E entity);
 

@@ -1,8 +1,7 @@
 package org.market.entity;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.market.dao.CategoryRepository;
+import org.market.repository.CategoryRepository;
 
 import java.util.Optional;
 
@@ -10,13 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CategoryHibernateTest extends GeneralHibernateTest {
 
-    private CategoryRepository categoryRepository;
-
-    @BeforeEach
-    void beforeEach() {
-        super.beforeEach();
-        categoryRepository = new CategoryRepository(session);
-    }
+    private final CategoryRepository categoryRepository = new CategoryRepository(session);
 
     @Test
     void createCategory() {
@@ -31,7 +24,7 @@ public class CategoryHibernateTest extends GeneralHibernateTest {
     }
 
     @Test
-    void readCategory() {
+    void findCategory() {
         Optional<Category> foundCategory = categoryRepository.findById(category.getId());
 
         assertThat(foundCategory.get()).isNotNull();
@@ -50,7 +43,8 @@ public class CategoryHibernateTest extends GeneralHibernateTest {
 
     @Test
     void deleteCategory() {
-        categoryRepository.delete(category.getId());
+        Optional<Category> foundCategory = categoryRepository.findById(category.getId());
+        categoryRepository.delete(foundCategory.orElse(null));
 
         Optional<Category> deletedCategory = categoryRepository.findById(category.getId());
 

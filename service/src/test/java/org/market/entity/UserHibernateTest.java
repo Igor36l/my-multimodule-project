@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserHibernateTest extends GeneralHibernateTest{
+public class UserHibernateTest extends GeneralHibernateTest {
 
     @Test
     void createUser() {
@@ -40,5 +40,4 @@ public class UserHibernateTest extends GeneralHibernateTest{
 
         assertThat(deletedUser).isNull();
     }
-
 }
