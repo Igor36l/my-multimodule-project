@@ -8,7 +8,7 @@ public class UserHibernateTest extends GeneralHibernateTest {
 
     @Test
     void createUser() {
-        User savedUser = session.get(User.class, user.getId());
+        User savedUser = entityManager.find(User.class, user.getId());
 
         assertThat(savedUser).isNotNull();
         assertThat(savedUser.getId()).isNotNull();
@@ -16,7 +16,7 @@ public class UserHibernateTest extends GeneralHibernateTest {
 
     @Test
     void readUser() {
-        User foundedUser = session.get(User.class, user.getId());
+        User foundedUser = entityManager.find(User.class, user.getId());
 
         assertThat(foundedUser).isNotNull();
         assertThat(foundedUser).isEqualTo(user);
@@ -24,19 +24,19 @@ public class UserHibernateTest extends GeneralHibernateTest {
 
     @Test
     void updateUser() {
-        User foundedUser = session.get(User.class, user.getId());
+        User foundedUser = entityManager.find(User.class, user.getId());
         foundedUser.setUsername("updateduser");
 
-        User updatedUser = session.get(User.class, user.getId());
+        User updatedUser = entityManager.find(User.class, user.getId());
 
         assertThat(updatedUser.getUsername()).isEqualTo("updateduser");
     }
 
     @Test
     void deleteUser() {
-        session.remove(user);
+        entityManager.remove(user);
 
-        User deletedUser = session.get(User.class, user.getId());
+        User deletedUser = entityManager.find(User.class, user.getId());
 
         assertThat(deletedUser).isNull();
     }

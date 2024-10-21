@@ -1,18 +1,19 @@
 package org.market;
 
-import lombok.Cleanup;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import jakarta.persistence.EntityManager;
 import org.market.entity.User;
-import org.market.util.HibernateUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.time.LocalDateTime;
 
+@ComponentScan
 public class HibernateRunner {
     public static void main(String[] args) {
-        @Cleanup SessionFactory sessionFactory = HibernateUtils.buildSessionFactory();
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
+        ApplicationContext context = new AnnotationConfigApplicationContext(HibernateRunner.class);
+        EntityManager entityManager = context.getBean(EntityManager.class);
+        entityManager .getTransaction().begin();
         User user = User.builder()
                 .username("testuser")
                 .email("testuser@example.com")
@@ -28,8 +29,8 @@ public class HibernateRunner {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        session.persist(user);
-        session.persist(user);
-        session.getTransaction().commit();
+        entityManager .persist(user);
+        entityManager .persist(user);
+        entityManager .getTransaction().commit();
     }
 }

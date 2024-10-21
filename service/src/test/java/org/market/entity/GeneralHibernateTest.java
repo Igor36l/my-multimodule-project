@@ -1,12 +1,13 @@
 package org.market.entity;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.market.util.HibernateTestUtils;
+import org.market.configuration.MainTestConfig;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,23 +17,22 @@ public class GeneralHibernateTest {
     protected User user;
     protected Category category;
     protected Category parentCategory;
-    protected Transaction transaction;
     protected Order order;
     protected Payment payment;
     protected Review review;
-    protected Session session;
 
-    protected static SessionFactory sessionFactory;
+    protected static EntityManager entityManager;
+    protected static ApplicationContext context;
 
     @BeforeAll
     static void setUp() {
-        sessionFactory = HibernateTestUtils.buildSessionFactory();
+        context = new AnnotationConfigApplicationContext(MainTestConfig.class);
+        entityManager = context.getBean(EntityManager.class);
     }
 
     @BeforeEach
        void beforeEachGeneral() {
-        session = sessionFactory.getCurrentSession();
-        transaction = session.beginTransaction();
+        entityManager.getTransaction().begin();
         user = User.builder()
                 .username("testuser")
                 .email("testuser@example.com")
@@ -48,20 +48,20 @@ public class GeneralHibernateTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        session.persist(user);
+        entityManager.persist(user);
 
         parentCategory = Category.builder()
                 .name("Parent Category")
                 .description("This is a parent category")
                 .build();
-        session.persist(parentCategory);
+        entityManager.persist(parentCategory);
 
         category = Category.builder()
                 .name("Child Category")
                 .description("This is a child category")
                 .parentCategory(parentCategory)
                 .build();
-        session.persist(category);
+        entityManager.persist(category);
 
         order = Order.builder()
                 .user(user)
@@ -72,7 +72,7 @@ public class GeneralHibernateTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        session.persist(order);
+        entityManager.persist(order);
 
         payment = Payment.builder()
                 .amount(BigDecimal.valueOf(1000))
@@ -81,7 +81,7 @@ public class GeneralHibernateTest {
                 .paymentMethod("Card")
                 .status(Payment.Status.IN_PROGRESS)
                 .build();
-        session.persist(payment);
+        entityManager.persist(payment);
 
         review = Review.builder()
                 .comment("Comment")
@@ -90,13 +90,18 @@ public class GeneralHibernateTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        session.persist(review);
+        entityManager.persist(review);
     }
 
     @AfterEach
     void afterEachGeneral() {
-        if (transaction != null && transaction.isActive()) {
-            transaction.rollback();
+        if (entityManager.getTransaction() != null && entityManager.getTransaction().isActive()) {
+            entityManager.getTransaction().rollback();
         }
+    }
+
+    @AfterAll
+    static void afterAll() {
+        entityManager.close();
     }
 }
