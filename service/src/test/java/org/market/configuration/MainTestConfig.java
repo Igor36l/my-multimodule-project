@@ -2,14 +2,13 @@ package org.market.configuration;
 
 import jakarta.persistence.EntityManager;
 import org.hibernate.SessionFactory;
-import org.market.App;
+import org.market.HibernateRunner;
 import org.market.util.HibernateTestUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@ComponentScan(basePackageClasses = App.class)
+@ComponentScan(basePackageClasses = HibernateRunner.class)
 public class MainTestConfig {
 
     @Bean
