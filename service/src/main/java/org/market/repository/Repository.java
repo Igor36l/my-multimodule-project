@@ -10,7 +10,7 @@ public interface Repository<K extends Serializable, E> {
 
     E update(E entity);
 
-    void delete(K id);
+    void delete(E entity);
 
     Optional<E> findById(K id);
 
