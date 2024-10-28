@@ -102,6 +102,6 @@ public class GeneralHibernateTest {
 
     @AfterAll
     static void afterAll() {
-        entityManager.close();
+        ((AnnotationConfigApplicationContext) context).close();
     }
 }

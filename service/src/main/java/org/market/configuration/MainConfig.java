@@ -9,12 +9,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan
+@ComponentScan("org.market")
 public class MainConfig {
 
     @Bean
     public EntityManager getEntityManager() {
-        @Cleanup SessionFactory sessionFactory = HibernateUtils.buildSessionFactory();
+        SessionFactory sessionFactory = HibernateUtils.buildSessionFactory();
         return sessionFactory.getCurrentSession();
     }
 }

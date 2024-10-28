@@ -13,7 +13,7 @@ public class HibernateRunner {
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(HibernateRunner.class);
         EntityManager entityManager = context.getBean(EntityManager.class);
-        entityManager .getTransaction().begin();
+        entityManager.getTransaction().begin();
         User user = User.builder()
                 .username("testuser")
                 .email("testuser@example.com")
@@ -29,8 +29,7 @@ public class HibernateRunner {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        entityManager .persist(user);
-        entityManager .persist(user);
-        entityManager .getTransaction().commit();
+        entityManager.persist(user);
+        entityManager.getTransaction().commit();
     }
 }
