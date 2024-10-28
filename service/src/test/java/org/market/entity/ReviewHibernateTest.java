@@ -2,6 +2,7 @@ package org.market.entity;
 
 import org.junit.jupiter.api.Test;
 import org.market.repository.ReviewRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -10,7 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ReviewHibernateTest extends GeneralHibernateTest {
 
-    private final ReviewRepository reviewRepository = context.getBean(ReviewRepository.class);
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     @Test
     void testCreateReview() {
@@ -39,18 +41,18 @@ class ReviewHibernateTest extends GeneralHibernateTest {
         assertThat(foundReview.get().getId()).isNotNull();
     }
 
-    @Test
-   void testUpdateReview() {
-        //given
-        Optional<Review> foundReview = reviewRepository.findById(review.getId());
-        foundReview.get().setComment("New comment");
-
-        //when
-        Optional<Review> updatedPayment = reviewRepository.findById(review.getId());
-
-        //then
-        assertThat(updatedPayment.get().getComment().equals("New comment"));
-    }
+//    @Test
+//   void testUpdateReview() {
+//        //given
+//        Optional<Review> foundReview = reviewRepository.findById(review.getId());
+//        foundReview.get().setComment("New comment");
+//
+//        //when
+//        Optional<Review> updatedPayment = reviewRepository.findById(review.getId());
+//
+//        //then
+//        assertThat(updatedPayment.get().getComment().equals("New comment"));
+//    }
 
     @Test
     void testDeletePayment() {

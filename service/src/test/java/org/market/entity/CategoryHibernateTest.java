@@ -2,6 +2,7 @@ package org.market.entity;
 
 import org.junit.jupiter.api.Test;
 import org.market.repository.CategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
@@ -9,7 +10,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CategoryHibernateTest extends GeneralHibernateTest {
 
-    private final CategoryRepository categoryRepository = context.getBean(CategoryRepository.class);
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Test
     void createCategory() {

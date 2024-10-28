@@ -1,15 +1,10 @@
 package org.market.repository;
 
-import jakarta.persistence.EntityManager;
 import org.market.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UserRepository extends RepositoryBase<Long, User> {
-
-    public UserRepository(EntityManager entityManager) {
-        super(User.class, entityManager);
-
-    }
+public interface UserRepository extends JpaRepository<User, Long> {
 
 }
