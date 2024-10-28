@@ -1,7 +1,7 @@
 package org.market.entity;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.market.repository.OrderRepository;
 import org.market.repository.PaymentRepository;
 
 import java.math.BigDecimal;
@@ -12,22 +12,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PaymentHibernateTest extends GeneralHibernateTest {
 
-    private PaymentRepository paymentRepository;
-
-    @BeforeEach
-    void beforeEach() {
-        paymentRepository = new PaymentRepository(session);
-    }
+    private final PaymentRepository paymentRepository = context.getBean(PaymentRepository.class);
+    private final OrderRepository orderRepository = context.getBean(OrderRepository.class);
 
     @Test
     void createPayment() {
+        Order newOrder = Order.builder()
+                .user(user)
+                .orderDate(LocalDateTime.now())
+                .status("PENDING")
+                .totalAmount(new BigDecimal("100.00"))
+                .shippingAddress("456 Elm St")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
         Payment newPayment = Payment.builder()
                 .amount(BigDecimal.valueOf(1000))
-                .order(order)
+                .order(newOrder)
                 .paymentDate(LocalDateTime.now())
                 .paymentMethod("Card")
                 .status(Payment.Status.IN_PROGRESS)
                 .build();
+
+        orderRepository.save(newOrder);
         Payment savedPayment = paymentRepository.save(newPayment);
 
         assertThat(savedPayment.getId()).isNotNull();
@@ -54,10 +61,10 @@ public class PaymentHibernateTest extends GeneralHibernateTest {
     @Test
     void deletePayment() {
         Optional<Payment> foundPayment = paymentRepository.findById(payment.getId());
+
         paymentRepository.delete(foundPayment.orElse(null));
 
-        Payment deletedPayment = session.get(Payment.class, payment.getId());
-
+        Payment deletedPayment = entityManager.find(Payment.class, payment.getId());
         assertThat(deletedPayment).isNull();
     }
 

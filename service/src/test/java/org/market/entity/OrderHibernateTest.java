@@ -1,6 +1,5 @@
 package org.market.entity;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.market.repository.OrderRepository;
 
@@ -12,12 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrderHibernateTest extends GeneralHibernateTest {
 
-    private OrderRepository orderRepository;
-
-    @BeforeEach
-    void beforeEach() {
-        orderRepository = new OrderRepository(session);
-    }
+    private final OrderRepository orderRepository = context.getBean(OrderRepository.class);
 
     @Test
     void createOrder() {
@@ -56,10 +50,10 @@ public class OrderHibernateTest extends GeneralHibernateTest {
     @Test
     void deleteOrder() {
         Optional<Order> foundOrder = orderRepository.findById(order.getId());
+
         orderRepository.delete(foundOrder.orElse(null));
 
         Optional<Order> deletedOrder = orderRepository.findById(order.getId());
-
         assertThat(deletedOrder).isEmpty();
     }
 }

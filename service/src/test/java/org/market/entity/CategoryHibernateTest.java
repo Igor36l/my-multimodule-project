@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CategoryHibernateTest extends GeneralHibernateTest {
 
-    private final CategoryRepository categoryRepository = new CategoryRepository(session);
+    private final CategoryRepository categoryRepository = context.getBean(CategoryRepository.class);
 
     @Test
     void createCategory() {
@@ -44,10 +44,10 @@ public class CategoryHibernateTest extends GeneralHibernateTest {
     @Test
     void deleteCategory() {
         Optional<Category> foundCategory = categoryRepository.findById(category.getId());
+
         categoryRepository.delete(foundCategory.orElse(null));
 
         Optional<Category> deletedCategory = categoryRepository.findById(category.getId());
-
         assertThat(deletedCategory).isEmpty();
     }
 }
