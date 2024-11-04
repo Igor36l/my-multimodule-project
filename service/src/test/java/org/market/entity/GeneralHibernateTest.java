@@ -1,17 +1,21 @@
 package org.market.entity;
 
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.market.configuration.MainTestConfig;
+import org.market.StoreApplication;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+
+@SpringBootTest(classes = StoreApplication.class)
+@Transactional
 public class GeneralHibernateTest {
 
     protected User user;
@@ -24,15 +28,22 @@ public class GeneralHibernateTest {
     protected static EntityManager entityManager;
     protected static ApplicationContext context;
 
+    protected final static PostgreSQLContainer<?> postgres =
+            new PostgreSQLContainer<>("postgres:17");
+
     @BeforeAll
-    static void setUp() {
-        context = new AnnotationConfigApplicationContext(MainTestConfig.class);
-        entityManager = context.getBean(EntityManager.class);
+    static void beforeAll() {
+        postgres.start();
     }
 
+    @AfterAll
+    static void afterAll() {
+        postgres.stop();
+    }
+
+
     @BeforeEach
-       void beforeEachGeneral() {
-        entityManager.getTransaction().begin();
+    void beforeEachGeneral() {
         user = User.builder()
                 .username("testuser")
                 .email("testuser@example.com")
@@ -93,15 +104,4 @@ public class GeneralHibernateTest {
         entityManager.persist(review);
     }
 
-    @AfterEach
-    void afterEachGeneral() {
-        if (entityManager.getTransaction() != null && entityManager.getTransaction().isActive()) {
-            entityManager.getTransaction().rollback();
-        }
-    }
-
-    @AfterAll
-    static void afterAll() {
-        ((AnnotationConfigApplicationContext) context).close();
-    }
 }

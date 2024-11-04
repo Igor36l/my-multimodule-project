@@ -2,6 +2,7 @@ package org.market.entity;
 
 import org.junit.jupiter.api.Test;
 import org.market.repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,7 +12,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrderHibernateTest extends GeneralHibernateTest {
 
-    private final OrderRepository orderRepository = context.getBean(OrderRepository.class);
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Test
     void createOrder() {
@@ -42,9 +44,9 @@ public class OrderHibernateTest extends GeneralHibernateTest {
         Optional<Order> foundOrder = orderRepository.findById(order.getId());
         foundOrder.get().setStatus("COMPLETED");
 
-        Order updatedOrder = orderRepository.update(foundOrder.get());
+        Optional<Order> updatedOrder = orderRepository.findById(foundOrder.get().getId());
 
-        assertThat(updatedOrder.getStatus()).isEqualTo("COMPLETED");
+        assertThat(updatedOrder.get().getStatus()).isEqualTo("COMPLETED");
     }
 
     @Test

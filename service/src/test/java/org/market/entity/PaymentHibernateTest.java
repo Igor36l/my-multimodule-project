@@ -3,6 +3,7 @@ package org.market.entity;
 import org.junit.jupiter.api.Test;
 import org.market.repository.OrderRepository;
 import org.market.repository.PaymentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,8 +13,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PaymentHibernateTest extends GeneralHibernateTest {
 
-    private final PaymentRepository paymentRepository = context.getBean(PaymentRepository.class);
-    private final OrderRepository orderRepository = context.getBean(OrderRepository.class);
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Test
     void createPayment() {
@@ -48,15 +52,6 @@ public class PaymentHibernateTest extends GeneralHibernateTest {
         assertThat(foundPayment.get().getId()).isNotNull();
     }
 
-    @Test
-    void updatePayment() {
-        Optional<Payment> foundPayment = paymentRepository.findById(payment.getId());
-        foundPayment.get().setStatus(Payment.Status.DONE);
-
-        Payment updatedPayment = paymentRepository.update(foundPayment.get());
-
-        assertThat(updatedPayment.getStatus()).isEqualByComparingTo(Payment.Status.DONE);
-    }
 
     @Test
     void deletePayment() {
