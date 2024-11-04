@@ -15,7 +15,7 @@ class ReviewHibernateTest extends GeneralHibernateTest {
     private ReviewRepository reviewRepository;
 
     @Test
-    void testCreateReview() {
+    void createReview() {
         //given
         Review newReview = Review.builder()
                 .comment("Comment")
@@ -33,29 +33,29 @@ class ReviewHibernateTest extends GeneralHibernateTest {
     }
 
     @Test
-   void testReadReview() {
+    void readReview() {
         //when
         Optional<Review> foundReview = reviewRepository.findById(review.getId());
 
         //then
-        assertThat(foundReview.get().getId()).isNotNull();
+        assertThat(foundReview.isPresent()).isTrue();
     }
 
-//    @Test
-//   void testUpdateReview() {
-//        //given
-//        Optional<Review> foundReview = reviewRepository.findById(review.getId());
-//        foundReview.get().setComment("New comment");
-//
-//        //when
-//        Optional<Review> updatedPayment = reviewRepository.findById(review.getId());
-//
-//        //then
-//        assertThat(updatedPayment.get().getComment().equals("New comment"));
-//    }
+    @Test
+    void testUpdateReview() {
+        //given
+        Optional<Review> foundReview = reviewRepository.findById(review.getId());
+        foundReview.ifPresent(review -> review.setComment("New comment"));
+
+        //when
+        Optional<Review> updatedPayment = reviewRepository.findById(review.getId());
+
+        //then
+        assertThat(updatedPayment.get().getComment().equals("New comment"));
+    }
 
     @Test
-    void testDeletePayment() {
+    void deletePayment() {
         //given
         Optional<Review> foundReview = reviewRepository.findById(review.getId());
 

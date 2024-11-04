@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.market.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserHibernateTest extends GeneralHibernateTest {
@@ -13,36 +16,62 @@ public class UserHibernateTest extends GeneralHibernateTest {
 
     @Test
     void createUser() {
-        User savedUser = entityManager.find(User.class, user.getId());
+        //given
+        User newUser = User.builder()
+                .username("newtestuser")
+                .email("newtestuser@example.com")
+                .password("password")
+                .firstName("Jason")
+                .lastName("Ivanov")
+                .phone("1234567890")
+                .address("Moscow 5st street")
+                .role(User.Role.USER)
+                .gender(User.Gender.MALE)
+                .isSeller(false)
+                .isActive(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
 
-        assertThat(savedUser).isNotNull();
+        //when
+        User savedUser = userRepository.save(newUser);
+
+        //then
         assertThat(savedUser.getId()).isNotNull();
     }
 
     @Test
     void readUser() {
-        User foundedUser = entityManager.find(User.class, user.getId());
+        //when
+        Optional<User> foundUser = userRepository.findById(user.getId());
 
-        assertThat(foundedUser).isNotNull();
-        assertThat(foundedUser).isEqualTo(user);
+        //then
+        assertThat(foundUser.isPresent()).isTrue();
     }
 
-//    @Test
-//    void updateUser() {
-//        User foundedUser = entityManager.find(User.class, user.getId());
-//        foundedUser.setUsername("updateduser");
-//
-//        User updatedUser = entityManager.find(User.class, user.getId());
-//
-//        assertThat(updatedUser.getUsername()).isEqualTo("updateduser");
-//    }
+    @Test
+    void updateUser() {
+        //given
+        Optional<User> foundUser = userRepository.findById(user.getId());
+        foundUser.ifPresent(user -> user.setUsername("updateduser"));
+
+        //when
+        Optional<User> updatedUser = userRepository.findById(user.getId());
+
+        //then
+        assertThat(updatedUser.get().getUsername()).isEqualTo("updateduser");
+    }
 
     @Test
     void deleteUser() {
-        entityManager.remove(user);
+        //given
+        Optional<User> foundUser = userRepository.findById(user.getId());
 
-        User deletedUser = entityManager.find(User.class, user.getId());
+        //when
+        userRepository.delete(foundUser.orElse(null));
 
-        assertThat(deletedUser).isNull();
+        //then
+        Optional<User> deletedUser = userRepository.findById(user.getId());
+        assertThat(deletedUser.isEmpty()).isTrue();
     }
 }

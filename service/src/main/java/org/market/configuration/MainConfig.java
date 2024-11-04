@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan("org.market")
 public class MainConfig {
 
-    @Bean
-    public EntityManager getEntityManager() {
-        SessionFactory sessionFactory = HibernateUtils.buildSessionFactory();
-        return sessionFactory.getCurrentSession();
-    }
+//    @Bean
+//    public EntityManager getEntityManager() {
+//        SessionFactory sessionFactory = HibernateUtils.buildSessionFactory();
+//        return sessionFactory.getCurrentSession();
+//    }
 }

@@ -59,8 +59,8 @@ public class PaymentHibernateTest extends GeneralHibernateTest {
 
         paymentRepository.delete(foundPayment.orElse(null));
 
-        Payment deletedPayment = entityManager.find(Payment.class, payment.getId());
-        assertThat(deletedPayment).isNull();
+        Optional<Payment> deletedPayment = paymentRepository.findById(payment.getId());
+        assertThat(deletedPayment).isEmpty();
     }
 
 }
