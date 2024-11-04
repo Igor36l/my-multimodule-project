@@ -1,25 +1,21 @@
 package org.market.entity;
 
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.market.MyApplication;
+import org.market.StoreApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
-@SpringBootTest(classes = MyApplication.class)
-@TestConfiguration
+@SpringBootTest(classes = StoreApplication.class)
+@Transactional
 public class GeneralHibernateTest {
 
     protected User user;
@@ -45,19 +41,9 @@ public class GeneralHibernateTest {
         postgres.stop();
     }
 
-    @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:mem:testdb;");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("");
-        return dataSource;
-    }
 
     @BeforeEach
-       void beforeEachGeneral() {
-        entityManager.getTransaction().begin();
+    void beforeEachGeneral() {
         user = User.builder()
                 .username("testuser")
                 .email("testuser@example.com")
@@ -118,10 +104,4 @@ public class GeneralHibernateTest {
         entityManager.persist(review);
     }
 
-    @AfterEach
-    void afterEachGeneral() {
-        if (entityManager.getTransaction() != null && entityManager.getTransaction().isActive()) {
-            entityManager.getTransaction().rollback();
-        }
-    }
 }
