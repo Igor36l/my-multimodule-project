@@ -1,20 +1,20 @@
 package org.market.entity;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.market.StoreApplication;
+import org.market.StoreApplicationRunner;
+import org.market.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
-@SpringBootTest(classes = StoreApplication.class)
+@SpringBootTest(classes = StoreApplicationRunner.class)
 @Transactional
 public class GeneralHibernateTest {
 
@@ -25,8 +25,22 @@ public class GeneralHibernateTest {
     protected Payment payment;
     protected Review review;
 
-    protected static EntityManager entityManager;
-    protected static ApplicationContext context;
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
+
+
 
     protected final static PostgreSQLContainer<?> postgres =
             new PostgreSQLContainer<>("postgres:17");
@@ -59,20 +73,20 @@ public class GeneralHibernateTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        entityManager.persist(user);
+        userRepository.save(user);
 
         parentCategory = Category.builder()
                 .name("Parent Category")
                 .description("This is a parent category")
                 .build();
-        entityManager.persist(parentCategory);
+        categoryRepository.save(parentCategory);
 
         category = Category.builder()
                 .name("Child Category")
                 .description("This is a child category")
                 .parentCategory(parentCategory)
                 .build();
-        entityManager.persist(category);
+        categoryRepository.save(category);
 
         order = Order.builder()
                 .user(user)
@@ -83,7 +97,7 @@ public class GeneralHibernateTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        entityManager.persist(order);
+        orderRepository.save(order);
 
         payment = Payment.builder()
                 .amount(BigDecimal.valueOf(1000))
@@ -92,7 +106,7 @@ public class GeneralHibernateTest {
                 .paymentMethod("Card")
                 .status(Payment.Status.IN_PROGRESS)
                 .build();
-        entityManager.persist(payment);
+        paymentRepository.save(payment);
 
         review = Review.builder()
                 .comment("Comment")
@@ -101,7 +115,7 @@ public class GeneralHibernateTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        entityManager.persist(review);
+        reviewRepository.save(review);
     }
 
 }
