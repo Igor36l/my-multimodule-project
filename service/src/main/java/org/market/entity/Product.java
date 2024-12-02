@@ -38,7 +38,7 @@ public class Product {
     @Column(nullable = false)
     private BigDecimal price;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer stock;
 
     @OneToMany

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        .product-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .product-item {
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .product-item p {
+            margin: 5px 0;
+        }
+        .product-item a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .product-item a:hover {
+            text-decoration: underline;
+        }
+        form {
+            margin-top: 20px;
+        }
+        form input {
+            display: block;
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        form button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h2>Products</h2>
+<ul class="product-list">
+    <li th:each="product : ${products}" class="product-item">
+        <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}">Name</a>
+        <p th:text="${product.description}">Description</p>
+        <p th:text="${product.price}">Price</p>
+    </li>
+</ul>
+
+<form method="post" action="/products">
+    <input type="text" name="name" id="name" placeholder="Name">
+    <input type="text" name="description" id="description" placeholder="Description">
+    <input type="number" name="price" id="price" placeholder="Price">
+    <button type="submit">Create</button>
+</form>
+</body>
+</html>
