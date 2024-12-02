@@ -5,11 +5,14 @@ import lombok.SneakyThrows;
 import org.market.entity.Product;
 import org.market.entity.ProductImage;
 import org.market.repository.ImageRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static java.nio.file.StandardOpenOption.CREATE;
@@ -19,12 +22,11 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 @RequiredArgsConstructor
 public class ProductImageService {
 
-    //    @Value("${app.image.bucket:/home/study/IdeaProjects/my-multimodule-project/images}")
-    private final String bucket = "/home/study/IdeaProjects/my-multimodule-project/images";
+    @Value("${app.image.bucket:/home/study/IdeaProjects/my-multimodule-project/images}")
+    private String bucket;
 
     private final ProductService productService;
     private final ImageRepository imageRepository;
-
 
     public void saveImageForProduct(Long productId, String imagePath, InputStream content) {
         upload(imagePath, content);
@@ -34,6 +36,24 @@ public class ProductImageService {
                 .product(product)
                 .imageUrl(imagePath)
                 .build()));
+    }
+
+    public List<byte[]> getImageForProduct(Long productId) {
+        List<ProductImage> imagesByProductId = imageRepository.findByProductId(productId);
+        List<byte[]> imageList = new ArrayList<>();
+        for (ProductImage image : imagesByProductId) {
+            get(image.getImageUrl()).ifPresent(imageList::add);
+        }
+        return imageList;
+    }
+
+    @SneakyThrows
+    private Optional<byte[]> get(String imagePath) {
+        Path fullImagePath = Path.of(bucket, imagePath);
+
+        return Files.exists(fullImagePath)
+                ? Optional.of(Files.readAllBytes(fullImagePath))
+                : Optional.empty();
     }
 
     @SneakyThrows
