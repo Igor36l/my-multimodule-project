@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static java.nio.file.StandardOpenOption.CREATE;
@@ -38,13 +36,12 @@ public class ProductImageService {
                 .build()));
     }
 
-    public List<byte[]> getImageForProduct(Long productId) {
-        List<ProductImage> imagesByProductId = imageRepository.findByProductId(productId);
-        List<byte[]> imageList = new ArrayList<>();
-        for (ProductImage image : imagesByProductId) {
-            get(image.getImageUrl()).ifPresent(imageList::add);
+    public Optional<byte[]> getImageForProduct(Long imageId) {
+        Optional<ProductImage> productImage = imageRepository.findById(imageId);
+        if (productImage.isPresent()) {
+            return get(productImage.get().getImageUrl());
         }
-        return imageList;
+        return Optional.empty();
     }
 
     @SneakyThrows

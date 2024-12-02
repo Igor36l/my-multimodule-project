@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/{productId}/images")
@@ -19,13 +19,13 @@ public class ProductImageController {
 
     private final ProductImageService productImageService;
 
-    @GetMapping
+    @GetMapping("/{imageId}")
     @ResponseBody
-    public ResponseEntity<List<byte[]>> getImagesByProductId(@PathVariable Long productId) {
-        List<byte[]> images = productImageService.getImageForProduct(productId);
+    public ResponseEntity<byte[]> getImagesByProductId(@PathVariable Long imageId) {
+        Optional<byte[]> images = productImageService.getImageForProduct(imageId);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
-                .body(images);
+                .body(images.get());
     }
 
     @SneakyThrows

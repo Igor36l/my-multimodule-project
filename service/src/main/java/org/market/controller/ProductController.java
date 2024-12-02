@@ -3,8 +3,10 @@ package org.market.controller;
 import lombok.RequiredArgsConstructor;
 import org.market.controller.dto.ProductCreateEditDto;
 import org.market.entity.Product;
+import org.market.entity.ProductImage;
 import org.market.exception.ProductNotFoundException;
 import org.market.mapper.ProductMapper;
+import org.market.service.ProductImageService;
 import org.market.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductImageService productImageService;
 
     @GetMapping
     public String getAllProducts(Model model) {
@@ -37,7 +40,11 @@ public class ProductController {
     @GetMapping("/{id}")
     public String findProductById(@PathVariable Long id, Model model) {
         Optional<Product> productById = productService.getProductById(id);
+        List<ProductImage> imagesForProduct = productService.getImageForProduct(id);
+
         model.addAttribute("product", productById.orElseThrow(ProductNotFoundException::new));
+        model.addAttribute("images", imagesForProduct);
+
         return "product/product-info";
     }
 

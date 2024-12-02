@@ -77,7 +77,7 @@
 
 <div class="image-container">
     <div th:each="image : ${images}">
-        <img th:src="@{/{productId}/images(productId=${product.id})}" alt="Product Image">
+        <img th:src="@{/{productId}/images/{imageId}(productId=${product.id}, imageId=${image.id})}" alt="Product Image">
     </div>
 </div>
 </body>

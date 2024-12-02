@@ -3,7 +3,9 @@ package org.market.service;
 import lombok.RequiredArgsConstructor;
 import org.market.controller.dto.ProductCreateEditDto;
 import org.market.entity.Product;
+import org.market.entity.ProductImage;
 import org.market.mapper.ProductMapper;
+import org.market.repository.ImageRepository;
 import org.market.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ImageRepository imageRepository;
 
     public Product createProduct(Product product) {
         product.setCreatedAt(LocalDateTime.now());
@@ -44,5 +47,9 @@ public class ProductService {
             return Optional.of(productRepository.save(ProductMapper.toProduct(productDto)));
         }
         return Optional.empty();
+    }
+
+    public List<ProductImage> getImageForProduct(Long productId) {
+        return imageRepository.findByProductId(productId);
     }
 }
