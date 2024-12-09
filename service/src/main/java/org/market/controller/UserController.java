@@ -52,7 +52,12 @@ public class UserController {
     }
 
     @PostMapping("/{id}/update")
-    public String update(@PathVariable Long id, @ModelAttribute("currentUser") UserCreateEditDto userDto) {
+    public String update(@PathVariable Long id, @ModelAttribute("user") @Validated UserCreateEditDto userDto,
+                         BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/users/{id}";
+        }
         userService.update(id, userDto);
         return "redirect:/products";
     }

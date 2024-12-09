@@ -1,6 +1,7 @@
 package org.market.mapper;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.market.controller.dto.UserCreateEditDto;
 import org.market.entity.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +31,9 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
     private void copy(UserCreateEditDto object, User user) {
         user.setUsername(object.username());
         user.setEmail(object.email());
-        user.setPassword(passwordEncoder.encode(object.password()));
+        if (!StringUtils.isBlank(object.password())) {
+            user.setPassword(passwordEncoder.encode(object.password()));
+        }
         user.setGender(parseGender(object.gender()));
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
