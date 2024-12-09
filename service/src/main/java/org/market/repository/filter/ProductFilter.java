@@ -1,4 +1,6 @@
 package org.market.repository.filter;
 
-public record ProductFilter (String name, String price){
+import java.math.BigDecimal;
+
+public record ProductFilter (String name, BigDecimal price){
 }

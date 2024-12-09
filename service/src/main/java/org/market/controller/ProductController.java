@@ -6,6 +6,7 @@ import org.market.controller.dto.ProductCreateEditDto;
 import org.market.controller.dto.ProductReadDto;
 import org.market.entity.ProductImage;
 import org.market.exception.ProductNotFoundException;
+import org.market.repository.filter.ProductFilter;
 import org.market.service.CategoryService;
 import org.market.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,8 +36,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public String getAllProducts(Model model) {
-        List<ProductReadDto> allProducts = productService.findAll();
+    public String getAllProductsWithFilter(Model model, @ModelAttribute("filter") ProductFilter filter) {
+        List<ProductReadDto> allProducts = new ArrayList<>();
+        if (filter.name() == null && filter.price() == null){
+            allProducts.addAll(productService.findAll());
+        } else {
+            allProducts.addAll(productService.findAllWithFilter(filter));
+        }
+        model.addAttribute("filter", filter);
         model.addAttribute("products", allProducts);
         return "product/products";
     }

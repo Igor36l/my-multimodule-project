@@ -26,15 +26,15 @@ public class FilterProductRepository {
     public List<Product> findByCriteria(ProductFilter filter) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Product> cq = cb.createQuery(Product.class);
-        Root<Product> user = cq.from(Product.class);
+        Root<Product> productRoot = cq.from(Product.class);
 
         List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.equal(user.get("name"), filter.name()));
+        predicates.add(cb.equal(productRoot.get("name"), filter.name()));
 
-        predicates.add(cb.equal(user.get("email"), filter.price()));
+        predicates.add(cb.equal(productRoot.get("price"), filter.price()));
 
 
-        cq.select(user).where(predicates.toArray(new Predicate[0]));
+        cq.select(productRoot).where(predicates.toArray(new Predicate[0]));
         return entityManager.createQuery(cq).getResultList();
     }
 }

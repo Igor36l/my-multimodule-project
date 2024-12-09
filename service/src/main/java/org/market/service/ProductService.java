@@ -8,8 +8,10 @@ import org.market.entity.Product;
 import org.market.entity.ProductImage;
 import org.market.mapper.ProductCreateEditMapper;
 import org.market.mapper.ProductReadMapper;
+import org.market.repository.FilterProductRepository;
 import org.market.repository.ImageRepository;
 import org.market.repository.ProductRepository;
+import org.market.repository.filter.ProductFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ public class ProductService {
     private final ImageRepository imageRepository;
     private final ProductCreateEditMapper productCreateEditMapper;
     private final ProductReadMapper productReadMapper;
+    private final FilterProductRepository filterProductRepository;
 
     public Optional<ProductReadDto> findById(long id) {
         return productRepository.findById(id).map(productReadMapper::map);
@@ -32,6 +35,10 @@ public class ProductService {
 
     public List<ProductReadDto> findAll() {
         return productRepository.findAll().stream().map(productReadMapper::map).toList();
+    }
+
+    public List<ProductReadDto> findAllWithFilter(ProductFilter filter) {
+        return productRepository.findByNameAndPrice(filter.name(), filter.price()).stream().map(productReadMapper::map).toList();
     }
 
     @Transactional
