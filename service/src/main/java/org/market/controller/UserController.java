@@ -39,7 +39,6 @@ public class UserController {
     }
 
     @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
     public String createUser(@ModelAttribute("user") @Validated UserCreateEditDto userDto, BindingResult bindingResult,
                              RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -52,14 +51,12 @@ public class UserController {
         return "redirect:/products";
     }
 
-    //    @PutMapping("/{id}")
-    @PutMapping("/{id}/update")
+    @PostMapping("/{id}/update")
     public String update(@PathVariable Long id, @ModelAttribute("currentUser") UserCreateEditDto userDto) {
         userService.update(id, userDto);
         return "redirect:/products";
     }
 
-    //    @DeleteMapping("/{id}")
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
         userService.delete(id);

@@ -2,19 +2,12 @@ package org.market.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.market.controller.dto.UserCreateEditDto;
-import org.market.controller.dto.UserReadDto;
 import org.market.entity.User;
 import org.market.service.UserService;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
-
-import java.security.Principal;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,7 +17,6 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginPage(Model model) {
-//        model.addAttribute("user", )
         return "/users/login-page";
     }
 

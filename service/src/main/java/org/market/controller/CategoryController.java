@@ -1,15 +1,13 @@
 package org.market.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.market.controller.dto.CategoryCreateEditDto;
 import org.market.controller.dto.CategoryReadDto;
 import org.market.service.CategoryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -29,9 +27,14 @@ public class CategoryController {
     }
 
     @PostMapping
-    public String createCategory(@ModelAttribute("category") CategoryCreateEditDto dto, RedirectAttributes redirectAttributes){
+    public String createCategory(@ModelAttribute("category") CategoryCreateEditDto dto,
+                                 RedirectAttributes redirectAttributes,
+                                 HttpServletRequest request){
         CategoryReadDto category = categoryService.createCategory(dto);
         redirectAttributes.addFlashAttribute("category", List.of(category));
-        return "redirect:/products/create";
+
+        String referer = request.getHeader("referer");
+
+        return "redirect:" + (referer != null ? referer : "/products");
     }
 }
