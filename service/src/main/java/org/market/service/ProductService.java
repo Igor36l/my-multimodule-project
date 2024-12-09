@@ -1,52 +1,60 @@
 package org.market.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.market.controller.dto.ProductCreateEditDto;
+import org.market.controller.dto.ProductReadDto;
 import org.market.entity.Product;
 import org.market.entity.ProductImage;
-import org.market.mapper.ProductMapper;
+import org.market.mapper.ProductCreateEditMapper;
+import org.market.mapper.ProductReadMapper;
 import org.market.repository.ImageRepository;
 import org.market.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;
     private final ImageRepository imageRepository;
+    private final ProductCreateEditMapper productCreateEditMapper;
+    private final ProductReadMapper productReadMapper;
 
-    public Product createProduct(Product product) {
-        product.setCreatedAt(LocalDateTime.now());
-        product.setUpdatedAt(LocalDateTime.now());
-        product.setStock(0);
-        return productRepository.save(product);
+    public Optional<ProductReadDto> findById(long id) {
+        return productRepository.findById(id).map(productReadMapper::map);
     }
 
-    public Optional<Product> getProductById(long id) {
-        return productRepository.findById(id);
+    public List<ProductReadDto> findAll() {
+        return productRepository.findAll().stream().map(productReadMapper::map).toList();
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    @Transactional
+    public ProductReadDto create(ProductCreateEditDto dto) {
+        Product product = productCreateEditMapper.map(dto);
+        return productReadMapper.map(productRepository.save(product));
     }
 
-    public boolean deleteProductById(long id) {
-        Optional<Product> productById = getProductById(id);
+    @Transactional
+    public boolean delete(long id) {
+        Optional<Product> productById = productRepository.findById(id);
+        List<ProductImage> imageForProduct = getImageForProduct(id);
+        imageRepository.deleteAll(imageForProduct);
         productById.ifPresent(productRepository::delete);
         return productById.isEmpty();
     }
 
-    public Optional<Product> update(Long id, ProductCreateEditDto productDto) {
-        Optional<Product> product = productRepository.findById(id);
-        if (product.isPresent()) {
-            return Optional.of(productRepository.save(ProductMapper.toProduct(productDto)));
-        }
-        return Optional.empty();
+    @Transactional
+    public void update(Long productId, ProductCreateEditDto productDto) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+        productRepository.save(productCreateEditMapper.map(productDto, product));
+//        return Optional.of(productReadMapper.map(product));
     }
 
     public List<ProductImage> getImageForProduct(Long productId) {

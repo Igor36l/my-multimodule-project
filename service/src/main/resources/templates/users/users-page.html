@@ -2,13 +2,15 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Product not found</title>
+    <title>Login</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<br>Product not found
+<div>
+    <p th:text="${session.principal.name}">name</p>
+</div>
+
 </body>
 </html>

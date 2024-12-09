@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.market.entity.Product;
 import org.market.entity.ProductImage;
 import org.market.repository.ImageRepository;
+import org.market.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +24,12 @@ public class ProductImageService {
     @Value("${app.image.bucket:/home/study/IdeaProjects/my-multimodule-project/images}")
     private String bucket;
 
-    private final ProductService productService;
+    private final ProductRepository productRepository;
     private final ImageRepository imageRepository;
 
     public void saveImageForProduct(Long productId, String imagePath, InputStream content) {
         upload(imagePath, content);
-        Optional<Product> productById = productService.getProductById(productId);
+        Optional<Product> productById = productRepository.findById(productId);
 
         productById.ifPresent(product -> imageRepository.save(ProductImage.builder()
                 .product(product)

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<h2>Registration</h2>
+
+<div th:each="error : ${errors}" class="validationError">
+    <label th:text="${error.defaultMessage}">error</label>
+</div>
+
+<form method="post" th:action="@{/users}" th:object="${user}">
+    <input type="text" name="username" id="username" placeholder="Name" th:value="*{username}"><br>
+    <input type="text" name="email" id="email" placeholder="email" th:value="*{email}"><br>
+    <input type="text" name="password" id="password" placeholder="password" th:value="*{email}"><br>
+
+    <select id="gender" name="gender">
+        <option  th:each="gender : ${genders}" th:text="${gender.name}" th:value="${gender.name}">gender</option>
+    </select><br><br>
+
+    <button type="submit">Create</button>
+</form>
+</body>
+</html>

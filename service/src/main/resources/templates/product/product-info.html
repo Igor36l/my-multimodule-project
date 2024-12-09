@@ -3,62 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Product</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .product-details {
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        .product-details h2 {
-            margin-top: 0;
-        }
-        .product-details p {
-            margin: 10px 0;
-        }
-        .form-container {
-            margin-top: 20px;
-        }
-        .form-container form {
-            margin-bottom: 20px;
-        }
-        .form-container label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-container input[type="file"] {
-            margin-bottom: 10px;
-        }
-        .form-container button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .form-container button:hover {
-            background-color: #0056b3;
-        }
-        .image-container {
-            margin-top: 20px;
-        }
-        .image-container img {
-            max-width: 100px;
-            max-height: 100px;
-            margin-right: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+
+<!-- Вставка навигационной панели -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div>
+    <form th:action="@{/products/{productId}/update(productId=${product.id()})}">
+        <button type="submit">Редактировать</button>
+    </form>
+    <form th:action="@{/products/{productId}/delete(productId=${product.id()})}" method="post">
+       <button type="submit">Удалить</button>
+    </form>
+</div><br>
+
+
 <div class="product-details">
-    <h2 th:text="${product.name}">Название товара</h2>
-    <p th:text="${product.description}">Описание товара</p>
-    <p th:text="${product.price}">Цена товара</p>
+    <h2 th:text="${product.name()}">Название товара</h2>
+    <p th:text="|Описание: ${product.description()}|">Описание товара</p>
+    <p th:text="|Цена: ${product.price()} руб.|">Цена товара</p>
+    <p th:text="|Остаток: ${product.stock()}|">Остаток</p>
+    <p th:each="category : ${product.categories}" th:text="|Категория: ${category.name}|">Категория</p>
+
 </div>
 
 <div class="form-container">
@@ -69,16 +37,20 @@
         </div>
         <button type="submit">Загрузить изображение</button>
     </form>
-
-    <form th:action="@{/products/{productId}/delete(productId=${product.id})}" th:method="post">
-        <button type="submit">Удалить товар</button>
-    </form>
 </div>
 
 <div class="image-container">
-    <div th:each="image : ${images}">
-        <img th:src="@{/{productId}/images/{imageId}(productId=${product.id}, imageId=${image.id})}" alt="Product Image">
+    <div class="carousel-wrapper">
+        <button class="carousel-button left-button">←</button>
+        <div class="carousel">
+            <div th:each="image : ${images}">
+                <img th:src="@{/{productId}/images/{imageId}(productId=${product.id}, imageId=${image.id})}" alt="Product Image">
+            </div>
+        </div>
+        <button class="carousel-button right-button">→</button>
     </div>
 </div>
+
+<script src="/js/scripts.js"></script>
 </body>
 </html>

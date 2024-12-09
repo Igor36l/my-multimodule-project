@@ -1,17 +1,22 @@
 package org.market.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.market.controller.dto.CategoryReadDto;
 import org.market.controller.dto.ProductCreateEditDto;
-import org.market.entity.Product;
+import org.market.controller.dto.ProductReadDto;
 import org.market.entity.ProductImage;
 import org.market.exception.ProductNotFoundException;
-import org.market.mapper.ProductMapper;
-import org.market.service.ProductImageService;
+import org.market.service.CategoryService;
 import org.market.service.ProductService;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,25 +26,31 @@ import java.util.Optional;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductImageService productImageService;
+    private final CategoryService categoryService;
+
+    @GetMapping("/create")
+    public String getCreateProductPage(Model model) {
+        List<CategoryReadDto> allCategories = categoryService.getAllCategories();
+        model.addAttribute("categories", allCategories);
+        return "product/product-create-page";
+    }
 
     @GetMapping
     public String getAllProducts(Model model) {
-        List<Product> allProducts = productService.getAllProducts();
+        List<ProductReadDto> allProducts = productService.findAll();
         model.addAttribute("products", allProducts);
         return "product/products";
     }
 
     @PostMapping
-    public String createProduct(ProductCreateEditDto productDto) {
-        Product product = ProductMapper.toProduct(productDto);
-        Product savedProduct = productService.createProduct(product);
-        return "redirect:/products/%d".formatted(savedProduct.getId());
+    public String createProduct(@ModelAttribute("product") ProductCreateEditDto productDto) {
+        ProductReadDto savedProduct = productService.create(productDto);
+        return "redirect:/products/%d".formatted(savedProduct.id());
     }
 
     @GetMapping("/{id}")
-    public String findProductById(@PathVariable Long id, Model model) {
-        Optional<Product> productById = productService.getProductById(id);
+    public String findById(@PathVariable Long id, Model model) {
+        Optional<ProductReadDto> productById = productService.findById(id);
         List<ProductImage> imagesForProduct = productService.getImageForProduct(id);
 
         model.addAttribute("product", productById.orElseThrow(ProductNotFoundException::new));
@@ -48,17 +59,35 @@ public class ProductController {
         return "product/product-info";
     }
 
-
     @PostMapping("/{id}/delete")
-    public String deleteProduct(@PathVariable Long id) {
-        productService.deleteProductById(id);
+    public String delete(@PathVariable Long id) {
+        productService.delete(id);
         return "redirect:/products";
     }
 
     @PostMapping("/{id}/update")
     public String update(@PathVariable("id") Long id,
-                         @ModelAttribute ProductCreateEditDto product) {
+                         @ModelAttribute("product") @Validated ProductCreateEditDto product,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes
+    ) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/products{id}/update";
+        }
         productService.update(id, product);
-        return "redirect:/products/%d".formatted(id);
+        return "redirect:/products/{id}";
+    }
+
+    @GetMapping("/{id}/update")
+    public String getUpdatePage(@PathVariable("id") Long id, Model model) {
+        Optional<ProductReadDto> productById = productService.findById(id);
+        List<ProductImage> imagesForProduct = productService.getImageForProduct(id);
+        List<CategoryReadDto> allCategories = categoryService.getAllCategories();
+
+        model.addAttribute("categories", allCategories);
+        model.addAttribute("product", productById.orElseThrow(ProductNotFoundException::new));
+        model.addAttribute("images", imagesForProduct);
+        return "product/product-update-page";
     }
 }

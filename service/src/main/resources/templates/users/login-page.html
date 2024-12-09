@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<h2>Sign in</h2><br>
+
+<div style="color: red" th:if="${param.error}">Bad credentials</div>
+<form method="post" action="/login" >
+    <label for="username">Username:
+        <input type="text" name="username" id="username" placeholder="Name">
+    </label><br>
+    <label>Password:
+        <input type="text" name="password" id="password" placeholder="password">
+    </label><br>
+
+    <button type="submit">Sing in</button>
+</form>
+<div>
+    <form method="get" action="/registration">
+        <button type="submit">Registration</button>
+    </form>
+</div>
+
+</body>
+</html>
