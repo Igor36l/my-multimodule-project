@@ -11,10 +11,10 @@
 
 <form action="/products">
     <label for="name">Name:
-        <input id="name" type="text" name="name" value="">
+        <input id="name" type="text" name="name" th:value="${filter.name()}">
     </label>
     <label for="price">Price:
-        <input id="price" type="number" name="price" value="">
+        <input id="price" type="number" name="price" th:value="${filter.price()}">
     </label>
     <button type="submit">Filter</button>
 </form>
