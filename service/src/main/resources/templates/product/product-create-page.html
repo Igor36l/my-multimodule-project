@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<h2>Создать новый товар</h2>
+<form method="post" action="/products" th:object="${product}">
+    <input type="text" name="name" id="name" placeholder="Name">
+    <input type="text" name="description" id="description" placeholder="Description">
+    <input type="number" name="price" id="price" placeholder="Price">
+    <input type="number" name="stock" id="stock" placeholder="Stock">
+    <select id="category" name="categoryIds">
+        <option th:each="category : ${categories}" th:text="${category.name}" th:value="${category.id}">category
+        </option>
+    </select>
+
+    <input type="text" name="seller" id="seller" placeholder="Seller">
+
+    <button type="submit">Create</button>
+</form>
+<form method="post" action="/categories">
+    <label for="categoryCreate">Create category:
+        <input type="text" id="categoryCreate" name="category">
+    </label>
+
+    <button>Create category</button>
+</form>
+
+<div th:replace="~{fragments/navbar :: footer}"></div>
+</body>
+</html>

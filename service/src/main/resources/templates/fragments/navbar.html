@@ -1,0 +1,35 @@
+<!-- src/main/resources/templates/fragments/navbar.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Navigation Bar</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<nav th:fragment="navbar" class="navbar">
+    <ul class="nav-list">
+        <li class="nav-item"><a th:href="@{/products}" class="nav-link">Все товары</a></li>
+        <li class="nav-item"><a th:href="@{/users}" class="nav-link">Списко пользователй</a></li>
+        <li class="nav-item"><a th:href="@{/products/create}" class="nav-link">Создать товар</a></li>
+        <li class="nav-item" th:if="${currentUser == null}">
+            <a th:href="@{/login}" class="nav-link">Войти</a>
+        </li>
+        <li class="nav-item" th:if="${currentUser != null}">
+            <a th:href="@{/users/{userId}(userId=${currentUser.id})}" th:text="${currentUser.username}" class="nav-link">currentUser</a>
+        </li>
+        <li class="nav-item" th:if="${currentUser != null}">
+            <a th:href="@{/logout}" class="nav-link">Выйти</a>
+        </li>
+        <li class="nav-item" th:if="${currentUser != null}">
+            <a th:href="@{/users/{userId}/bucket(userId=${currentUser.id})}" class="nav-link">
+            <img src="/bucket.png" width="20px" height="20px" align="left" alt="">
+            <span>Корзина</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+<footer th:fragment="footer" class="footer">
+    <p>Интернет магазин. Автор Игорь Лебедев. 2024г.</p>
+</footer>
+</body>
+</html>

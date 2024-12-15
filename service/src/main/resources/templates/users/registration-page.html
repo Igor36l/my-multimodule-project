@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<h2>Регистрация</h2>
+
+<div th:each="error : ${errors}" class="validationError">
+    <label th:text="${error.defaultMessage}">error</label>
+</div>
+
+<form method="post" th:action="@{/users}" th:object="${user}">
+    <input type="text" name="username" id="username" placeholder="имя" th:value="*{username}"><br>
+    <input type="text" name="email" id="email" placeholder="эл. почта" th:value="*{email}"><br>
+    <input type="password" name="password" id="password" placeholder="пароль" th:value="*{password}"><br>
+
+    <select id="gender" name="Пол">
+        <option  th:each="gender : ${genders}" th:text="${gender.name}" th:value="${gender.name}">gender</option>
+    </select><br><br>
+
+    <button type="submit">Создать</button>
+</form>
+</body>
+</html>

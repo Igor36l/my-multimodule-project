@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход в аккаунтв</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<h2>Войдите в аккаунт</h2><br>
+
+<div style="color: red" th:if="${param.error}">Bad credentials</div>
+<form method="post" action="/login" >
+    <label for="username">Имя пользователя:
+        <input type="text" name="username" id="username" placeholder="имя пользователя">
+    </label><br>
+    <label>Пароль:
+        <input type="password" name="password" id="password" placeholder="пароль">
+    </label><br>
+
+    <button type="submit">Войти</button>
+</form>
+<div>
+    <form method="get" action="/registration">
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+</div>
+
+</body>
+</html>

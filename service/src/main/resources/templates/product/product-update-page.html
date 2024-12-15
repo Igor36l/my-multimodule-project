@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<form th:action="@{/products/{productId}/delete(productId=${product.id})}" th:method="post">
+    <button type="submit">Удалить</button>
+</form>
+<br>
+
+<h2>Редактирование товар</h2>
+
+<form th:action="@{/products/{productId}/update(productId=${product.id})}" th:method="post" th:object="${product}">
+    <input type="text" name="name" id="name" placeholder="Name" th:value="*{name()}">
+    <input type="text" name="description" id="description" placeholder="Description" th:value="*{description()}">
+    <input type="number" name="price" id="price" placeholder="Price" th:value="*{price()}">
+    <input type="number" name="stock" id="stock" placeholder="Stock" th:value="*{stock()}">
+    <label>Категория товара:
+        <div th:each="productCategory : ${product.categories()}">
+            <select id="category" name="categoryIds">
+                <option th:each="category : ${categories}" th:text="${category.name()}" th:value="${category.id()}"
+                        th:selected="${productCategory.id() == category.id()}">category
+                </option>
+            </select>
+        </div>
+    </label>
+    <input type="number" name="seller" id="seller" placeholder="Продавец">
+    <button type="submit">Сохранить</button>
+</form>
+<form method="post" action="/categories">
+    <label for="categoryCreate">Create category:
+        <input type="text" id="categoryCreate" name="category">
+    </label>
+    <button>Создать категорию</button>
+</form>
+<div class="form-container">
+    <form th:action="@{/{productId}/images(productId=${product.id})}" enctype="multipart/form-data" method="post">
+        <div>
+            <label for="image">Image</label>
+            <input id="image" type="file" name="file">
+        </div>
+        <button type="submit">Загрузить изображение</button>
+    </form>
+</div>
+<div class="carousel">
+    <div th:each="image : ${images}">
+        <img th:src="@{/{productId}/images/{imageId}(productId=${product.id}, imageId=${image.id})}"
+             alt="Product Image">
+    </div>
+</div>
+<div th:replace="~{fragments/navbar :: footer}"></div>
+<script src="/js/scripts.js"></script>
+</body>
+</html>

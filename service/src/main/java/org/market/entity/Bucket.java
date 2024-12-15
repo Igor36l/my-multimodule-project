@@ -22,8 +22,8 @@ import java.util.List;
 @Builder
 @Data
 @Entity
-@Table(name = "wishlist")
-public class Wishlist {
+@Table(name = "bucket")
+public class Bucket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +34,4 @@ public class Wishlist {
 
     @OneToMany
     private List<Product> product = new ArrayList<>();
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
 }

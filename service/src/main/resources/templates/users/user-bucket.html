@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<h2>Корзина</h2>
+<table>
+    <tbody>
+    <tr th:each="product : ${bucket.products()}">
+        <td>
+            <div class="product-details">
+                <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name()}">Name</a>
+                <p th:text="|Описание: ${product.description()}|">Описание товара</p>
+                <p th:text="|Цена: ${product.price()} руб.|">Цена товара</p>
+                <p th:text="|Остаток: ${product.stock()}|">Остаток</p>
+                <p th:each="category : ${product.categories}" th:text="|Категория: ${category.name}|">Категория</p>
+            </div>
+        </td>
+        <td>
+            Нужны ли здесь картинки?
+        </td>
+        <td>
+            <form th:action="@{/users/{userId}/bucket/{productId}/delete(userId=${currentUser.id}, productId=${product.id})}" method="post">
+                <button class="add-to-cart-button">Удалить из корзины</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<form action="#" method="post">
+    <button>Купить все товары</button>
+</form>
+<div th:replace="~{fragments/navbar :: footer}"></div>
+</body>
+</html>
