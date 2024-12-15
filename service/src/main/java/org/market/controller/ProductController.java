@@ -5,10 +5,15 @@ import org.market.controller.dto.CategoryReadDto;
 import org.market.controller.dto.ProductCreateEditDto;
 import org.market.controller.dto.ProductReadDto;
 import org.market.entity.ProductImage;
+import org.market.entity.User;
 import org.market.exception.ProductNotFoundException;
 import org.market.repository.filter.ProductFilter;
+import org.market.service.BucketService;
 import org.market.service.CategoryService;
 import org.market.service.ProductService;
+import org.market.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +33,8 @@ public class ProductController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
+    private final BucketService bucketService;
+    private final UserService userService;
 
     @GetMapping("/create")
     public String getCreateProductPage(Model model) {
@@ -38,11 +46,21 @@ public class ProductController {
     @GetMapping
     public String getAllProductsWithFilter(Model model, @ModelAttribute("filter") ProductFilter filter) {
         List<ProductReadDto> allProducts = new ArrayList<>();
-        if (filter.name() == null && filter.price() == null){
-            allProducts.addAll(productService.findAll());
-        } else {
-            allProducts.addAll(productService.findAllWithFilter(filter));
+        allProducts.addAll(productService.findAllWithFilter(filter));
+        List<ProductImage> imagesForProduct = new ArrayList<>();
+        allProducts.stream().forEach(product -> {
+            imagesForProduct.addAll(productService.getImageForProduct(product.id()));
+
+        });
+        model.addAttribute("images", imagesForProduct);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() != null) {
+            String username = authentication.getName();
+            User user = userService.loadUserByUsername(username);
+            model.addAttribute("bucket", bucketService.findBucketByUserId(user.getId()).orElseThrow());
         }
+
         model.addAttribute("filter", filter);
         model.addAttribute("products", allProducts);
         return "product/products";

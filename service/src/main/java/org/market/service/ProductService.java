@@ -33,12 +33,8 @@ public class ProductService {
         return productRepository.findById(id).map(productReadMapper::map);
     }
 
-    public List<ProductReadDto> findAll() {
-        return productRepository.findAll().stream().map(productReadMapper::map).toList();
-    }
-
     public List<ProductReadDto> findAllWithFilter(ProductFilter filter) {
-        return productRepository.findByNameAndPrice(filter.name(), filter.price()).stream().map(productReadMapper::map).toList();
+        return productRepository.findByNameAndPrice(filter.name(), filter.minPrice(), filter.maxPrice()).stream().map(productReadMapper::map).toList();
     }
 
     @Transactional

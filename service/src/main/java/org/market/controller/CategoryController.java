@@ -20,7 +20,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public String findAll(Model model){
+    public String findAll(Model model) {
         List<CategoryReadDto> allCategories = categoryService.getAllCategories();
         model.addAttribute("categories", allCategories);
         return "category/categories";
@@ -29,7 +29,7 @@ public class CategoryController {
     @PostMapping
     public String createCategory(@ModelAttribute("category") CategoryCreateEditDto dto,
                                  RedirectAttributes redirectAttributes,
-                                 HttpServletRequest request){
+                                 HttpServletRequest request) {
         CategoryReadDto category = categoryService.createCategory(dto);
         redirectAttributes.addFlashAttribute("category", List.of(category));
 

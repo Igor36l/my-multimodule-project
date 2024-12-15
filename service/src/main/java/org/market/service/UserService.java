@@ -48,10 +48,9 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void update(Long id, UserCreateEditDto userDto) {
-        Optional<User> updatedUser = userRepository.findById(id)
+       userRepository.findById(id)
                 .map(user -> userCreateEditMapper.map(userDto, user))
-                .map(userRepository::save);
-
+                .map(userRepository::save).orElseThrow();
 //        return updatedUser.map(userReadMapper::map);
     }
 

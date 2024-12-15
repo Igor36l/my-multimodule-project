@@ -15,7 +15,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers("/**").permitAll())
+                        request
+                                .requestMatchers("/css/*", "js/*", "/bucket.png", "/login", "/registration", "users/**").permitAll()
+                                .requestMatchers("/**").authenticated()
+                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .formLogin(configurer ->
@@ -29,5 +32,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-
 }

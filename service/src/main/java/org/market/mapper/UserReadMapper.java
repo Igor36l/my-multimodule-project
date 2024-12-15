@@ -9,6 +9,6 @@ public class UserReadMapper implements Mapper<User, UserReadDto>{
 
     @Override
     public UserReadDto map(User object) {
-        return new UserReadDto(object.getId(), object.getUsername(), object.getEmail(), object.getPassword(), object.getGender().name());
+        return new UserReadDto(object.getId(), object.getUsername(), object.getEmail(), object.getPassword(), object.getGender().name(), object.getIsSeller());
     }
 }

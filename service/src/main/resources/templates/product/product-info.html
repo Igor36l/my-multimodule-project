@@ -6,51 +6,38 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-
-<!-- Вставка навигационной панели -->
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-
 <div>
     <form th:action="@{/products/{productId}/update(productId=${product.id()})}">
         <button type="submit">Редактировать</button>
     </form>
     <form th:action="@{/products/{productId}/delete(productId=${product.id()})}" method="post">
-       <button type="submit">Удалить</button>
+        <button type="submit">Удалить</button>
     </form>
-</div><br>
-
-
-<div class="product-details">
+</div>
+<br>
+<div class="product-details-info">
     <h2 th:text="${product.name()}">Название товара</h2>
     <p th:text="|Описание: ${product.description()}|">Описание товара</p>
     <p th:text="|Цена: ${product.price()} руб.|">Цена товара</p>
     <p th:text="|Остаток: ${product.stock()}|">Остаток</p>
     <p th:each="category : ${product.categories}" th:text="|Категория: ${category.name}|">Категория</p>
-
 </div>
-
-<div class="form-container">
-    <form th:action="@{/{productId}/images(productId=${product.id})}" enctype="multipart/form-data" method="post">
-        <div>
-            <label for="image">Image</label>
-            <input id="image" type="file" name="file">
-        </div>
-        <button type="submit">Загрузить изображение</button>
-    </form>
-</div>
-
-<div class="image-container">
-    <div class="carousel-wrapper">
-        <button class="carousel-button left-button">←</button>
-        <div class="carousel">
-            <div th:each="image : ${images}">
-                <img th:src="@{/{productId}/images/{imageId}(productId=${product.id}, imageId=${image.id})}" alt="Product Image">
-            </div>
-        </div>
-        <button class="carousel-button right-button">→</button>
+<div class="carousel">
+    <div th:each="image : ${images}">
+        <img th:src="@{/{productId}/images/{imageId}(productId=${product.id}, imageId=${image.id})}"
+             alt="Product Image">
     </div>
 </div>
 
+<form th:action="@{/{productId}/images(productId=${product.id})}" enctype="multipart/form-data" method="post">
+    <div>
+        <label for="image">Image</label>
+        <input id="image" type="file" name="file">
+    </div>
+    <button type="submit">Загрузить изображение</button>
+</form>
+<div th:replace="~{fragments/navbar :: footer}"></div>
 <script src="/js/scripts.js"></script>
 </body>
 </html>

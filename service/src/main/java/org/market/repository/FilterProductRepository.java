@@ -31,7 +31,7 @@ public class FilterProductRepository {
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(cb.equal(productRoot.get("name"), filter.name()));
 
-        predicates.add(cb.equal(productRoot.get("price"), filter.price()));
+        predicates.add(cb.equal(productRoot.get("price"), filter.minPrice()));
 
 
         cq.select(productRoot).where(predicates.toArray(new Predicate[0]));

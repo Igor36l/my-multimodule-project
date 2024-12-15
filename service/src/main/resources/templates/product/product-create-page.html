@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Products</title>
@@ -7,20 +7,18 @@
 </head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-
-
 <h2>Создать новый товар</h2>
-
 <form method="post" action="/products" th:object="${product}">
     <input type="text" name="name" id="name" placeholder="Name">
     <input type="text" name="description" id="description" placeholder="Description">
     <input type="number" name="price" id="price" placeholder="Price">
     <input type="number" name="stock" id="stock" placeholder="Stock">
     <select id="category" name="categoryIds">
-        <option th:each="category : ${categories}" th:text="${category.name}" th:value="${category.id}">category</option>
+        <option th:each="category : ${categories}" th:text="${category.name}" th:value="${category.id}">category
+        </option>
     </select>
 
-    <input type="number" name="seller" id="seller" placeholder="Seller">
+    <input type="text" name="seller" id="seller" placeholder="Seller">
 
     <button type="submit">Create</button>
 </form>
@@ -32,5 +30,6 @@
     <button>Create category</button>
 </form>
 
+<div th:replace="~{fragments/navbar :: footer}"></div>
 </body>
 </html>

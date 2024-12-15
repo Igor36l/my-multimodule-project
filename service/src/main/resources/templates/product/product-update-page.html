@@ -6,13 +6,11 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-
-<!-- Вставка навигационной панели -->
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-
 <form th:action="@{/products/{productId}/delete(productId=${product.id})}" th:method="post">
     <button type="submit">Удалить</button>
-</form><br>
+</form>
+<br>
 
 <h2>Редактирование товар</h2>
 
@@ -24,22 +22,21 @@
     <label>Категория товара:
         <div th:each="productCategory : ${product.categories()}">
             <select id="category" name="categoryIds">
-                <option th:each="category : ${categories}" th:text="${category.name()}" th:value="${category.id()}" th:selected="${productCategory.id() == category.id()}">category</option>
+                <option th:each="category : ${categories}" th:text="${category.name()}" th:value="${category.id()}"
+                        th:selected="${productCategory.id() == category.id()}">category
+                </option>
             </select>
         </div>
     </label>
-
-    <input type="number" name="seller" id="seller" placeholder="Seller">
-
+    <input type="number" name="seller" id="seller" placeholder="Продавец">
     <button type="submit">Сохранить</button>
 </form>
 <form method="post" action="/categories">
     <label for="categoryCreate">Create category:
         <input type="text" id="categoryCreate" name="category">
     </label>
-    <button type="submit">Create category</button>
+    <button>Создать категорию</button>
 </form>
-
 <div class="form-container">
     <form th:action="@{/{productId}/images(productId=${product.id})}" enctype="multipart/form-data" method="post">
         <div>
@@ -49,19 +46,13 @@
         <button type="submit">Загрузить изображение</button>
     </form>
 </div>
-
-<div class="image-container">
-    <div class="carousel-wrapper">
-        <button class="carousel-button left-button">←</button>
-        <div class="carousel">
-            <div th:each="image : ${images}">
-                <img th:src="@{/{productId}/images/{imageId}(productId=${product.id}, imageId=${image.id})}" alt="Product Image">
-            </div>
-        </div>
-        <button class="carousel-button right-button">→</button>
+<div class="carousel">
+    <div th:each="image : ${images}">
+        <img th:src="@{/{productId}/images/{imageId}(productId=${product.id}, imageId=${image.id})}"
+             alt="Product Image">
     </div>
 </div>
-
+<div th:replace="~{fragments/navbar :: footer}"></div>
 <script src="/js/scripts.js"></script>
 </body>
 </html>

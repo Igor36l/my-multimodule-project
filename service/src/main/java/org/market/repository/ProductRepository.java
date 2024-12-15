@@ -14,12 +14,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "Select * from product p " +
             "where " +
             "CASE " +
-            "WHEN :name = '' " +
-            "THEN p.price = :price " +
-            "WHEN :price is null " +
-            "THEN p.name = :name " +
-            "ELSE p.name = :name and p.price = :price " +
+            "WHEN (:name = '' or :name is null) and :minPrice is null " +
+            "THEN 2 = 2 " +
+            "WHEN :name = '' or :name is null " +
+            "THEN p.price <= :maxPrice and p.price >= :minPrice " +
+            "WHEN :minPrice is null " +
+            "THEN p.name like %:name% " +
+            "ELSE p.name like %:name% and p.price <= :maxPrice and p.price >= :minPrice " +
             "END"
             , nativeQuery = true)
-    List<Product> findByNameAndPrice(String name, BigDecimal price);
+    List<Product> findByNameAndPrice(String name, BigDecimal minPrice, BigDecimal maxPrice);
 }

@@ -1,9 +1,10 @@
 package org.market.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.market.controller.dto.UserCreateEditDto;
-import org.market.controller.dto.UserReadDto;
+import org.market.controller.dto.*;
 import org.market.entity.User;
+import org.market.service.BucketService;
+import org.market.service.SellerService;
 import org.market.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -14,12 +15,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
+    private final SellerService sellerService;
+    private final BucketService bucketService;
 
     @GetMapping
     public String findAll(Model model) {
@@ -28,11 +33,15 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable Long id, Model model) {
+    public String findById(@PathVariable Long id, Model model, @ModelAttribute("seller") SellerCreateEditDto dto) {
         return userService.findById(id)
                 .map(user -> {
                     model.addAttribute("user", user);
                     model.addAttribute("genders", User.Gender.values());
+                    if (user.isSeller()) {
+                        model.addAttribute("seller", sellerService.findByUserId(id)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+                    }
                     return "users/user-info-page";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -66,5 +75,29 @@ public class UserController {
     public String delete(@PathVariable Long id) {
         userService.delete(id);
         return "redirect:/products";
+    }
+
+    @GetMapping("/{id}/bucket")
+    public String getBucket(@PathVariable("id") Long id, Model model){
+        BucketReadDto bucketByUserId = bucketService.findBucketByUserId(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        model.addAttribute("bucket", bucketByUserId);
+        return "users/user-bucket";
+    }
+
+    @PostMapping("/{id}/bucket")
+    public String addProductToBucket(@PathVariable("id") Long id,
+                                     @RequestHeader("referer") String redirectUrl,
+                                     @ModelAttribute("bucket") BucketCreateEditDto bucketDto){
+       bucketService.addProduct(id, bucketDto).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return "redirect:" + (redirectUrl != null ? redirectUrl : "/products");
+    }
+
+    @PostMapping("/{userId}/bucket/{productId}/delete")
+    public String deleteProductFromBucket(@PathVariable("userId") Long userId,
+                                     @PathVariable("productId") Long productId,
+                                     @RequestHeader("referer") String redirectUrl
+    ){
+        bucketService.deleteProduct(userId, productId);
+        return "redirect:" + (redirectUrl != null ? redirectUrl : "/products");
     }
 }

@@ -66,7 +66,7 @@ public class User implements UserDetails {
     }
 
     public enum Role {
-        USER, ADMIN, SELLER
+        USER, ADMIN
     }
 
     public enum Gender {

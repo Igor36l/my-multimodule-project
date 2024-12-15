@@ -8,10 +8,13 @@ import org.market.repository.ImageRepository;
 import org.market.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static java.nio.file.StandardOpenOption.CREATE;
@@ -21,12 +24,13 @@ import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 @RequiredArgsConstructor
 public class ProductImageService {
 
-    @Value("${app.image.bucket:/home/study/IdeaProjects/my-multimodule-project/images}")
+    @Value("${app.image.bucket}")
     private String bucket;
 
     private final ProductRepository productRepository;
     private final ImageRepository imageRepository;
 
+    @Transactional
     public void saveImageForProduct(Long productId, String imagePath, InputStream content) {
         upload(imagePath, content);
         Optional<Product> productById = productRepository.findById(productId);
@@ -38,11 +42,8 @@ public class ProductImageService {
     }
 
     public Optional<byte[]> getImageForProduct(Long imageId) {
-        Optional<ProductImage> productImage = imageRepository.findById(imageId);
-        if (productImage.isPresent()) {
-            return get(productImage.get().getImageUrl());
-        }
-        return Optional.empty();
+        ProductImage productImage = imageRepository.findById(imageId).orElseThrow();
+        return get(productImage.getImageUrl());
     }
 
     @SneakyThrows

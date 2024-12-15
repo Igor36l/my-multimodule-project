@@ -3,32 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <title>Products</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.1/nouislider.min.css">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-
-<form action="/products">
-    <label for="name">Name:
+<form id="filter-form" action="/products">
+    <label for="name">Название:
         <input id="name" type="text" name="name" th:value="${filter.name()}">
     </label>
-    <label for="price">Price:
-        <input id="price" type="number" name="price" th:value="${filter.price()}">
-    </label>
-    <button type="submit">Filter</button>
+    <label>Цена:
+        <input id="minPrice" type="hidden" name="minPrice" th:value="${filter.minPrice()}">
+        <input id="maxPrice" type="hidden" name="maxPrice" th:value="${filter.maxPrice()}">
+        <div id="price-slider"></div>
+        <div>
+            <span id="price-range-value"></span>
+        </div>
+    </label><br>
+    <button type="submit">Найти товар</button>
 </form>
+<h2>Все товары</h2>
+<table>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td>
+            <div class="product-details">
+                <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name()}">Name</a>
+                <p th:text="|Описание: ${product.description()}|">Описание товара</p>
+                <p th:text="|Цена: ${product.price()} руб.|">Цена товара</p>
+                <p th:text="|Остаток: ${product.stock()}|">Остаток</p>
+                <p th:each="category : ${product.categories}" th:text="|Категория: ${category.name}|">Категория</p>
+            </div>
+        </td>
+        <td>
+            <div class="carousel">
+                <div th:each="image : ${images}">
+                    <div th:if="${image.product.id == product.id}">
+                        <img th:src="@{/{productId}/images/{imageId}(productId=${product.id}, imageId=${image.id})}"
+                             alt="Product Image">
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td>
+            <div th:if="${bucket.userId == currentUser.id}">
+                <form th:action="@{/users/{userId}/bucket(userId=${currentUser.id})}"
+                      th:if="${!#lists.contains(bucket.products(), product)}" method="post">
+                    <input type="hidden" name="productId" th:value="${product.id}">
+                    <button class="add-to-cart-button">Добавить в корзину</button>
+                </form>
+                <form th:action="@{/users/{userId}/bucket/{productId}/delete(userId=${currentUser.id}, productId=${product.id})}"
+                      th:if="${#lists.contains(bucket.products(), product)}" method="post">
+                    <button class="add-to-cart-button">Удалить из корзины</button>
+                </form>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div th:replace="~{fragments/navbar :: footer}"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.1/nouislider.min.js"></script>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        var slider = document.getElementById('price-slider');
+        var initialMinPrice = /*[[${filter.minPrice()} ?: 0]]*/;
+        var initialMaxPrice = /*[[${filter.maxPrice()} ?: 1000000]]*/;
 
-<h2>Products</h2>
-<ul class="product-list">
-    <li th:each="product : ${products}" class="product-item">
-        <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name()}">Name</a>
-        <p th:text="|Описание: ${product.description()}|">Описание товара</p>
-        <p th:text="|Цена: ${product.price()} руб.|">Цена товара</p>
-        <p th:text="|Остаток: ${product.stock()}|">Остаток</p>
-        <p th:each="category : ${product.categories}" th:text="|Категория: ${category.name}|">Категория</p>
-    </li>
-</ul>
+        noUiSlider.create(slider, {
+            start: [initialMinPrice, initialMaxPrice], // Начальные значения
+            connect: true,
+            range: {
+                'min': 0,
+                'max': 1000000
+            },
+            step: 10000, // Шаг изменения значений
+            format: {
+                to: function (value) {
+                    return '' + value;
+                },
+                from: function (value) {
+                    return Number(value.replace('', ''));
+                }
+            }
+        });
 
+        var priceRangeValue = document.getElementById('price-range-value');
+
+        slider.noUiSlider.on('update', function (values, handle) {
+            priceRangeValue.innerHTML = values.join(' - ');
+        });
+
+        document.getElementById('filter-form').addEventListener('submit', function (event) {
+            var minPrice = slider.noUiSlider.get()[0];
+            var maxPrice = slider.noUiSlider.get()[1];
+            document.getElementById('minPrice').value = minPrice;
+            document.getElementById('maxPrice').value = maxPrice;
+        });
+    });
+</script>
+<script src="/js/scripts.js"></script>
 </body>
 </html>

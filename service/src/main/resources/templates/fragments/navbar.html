@@ -20,12 +20,16 @@
         <li class="nav-item" th:if="${currentUser != null}">
             <a th:href="@{/logout}" class="nav-link">Выйти</a>
         </li>
-        <li class="nav-item"><a th:href="@{/bucket}" class="nav-link">
-            <img src="bucket.png" width="20px" height="20px" align="left" alt="">
-            <span>Корзина</span></a>
+        <li class="nav-item" th:if="${currentUser != null}">
+            <a th:href="@{/users/{userId}/bucket(userId=${currentUser.id})}" class="nav-link">
+            <img src="/bucket.png" width="20px" height="20px" align="left" alt="">
+            <span>Корзина</span>
+            </a>
         </li>
     </ul>
-
 </nav>
+<footer th:fragment="footer" class="footer">
+    <p>Интернет магазин. Автор Игорь Лебедев. 2024г.</p>
+</footer>
 </body>
 </html>
